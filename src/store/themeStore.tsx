@@ -11,23 +11,30 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    return savedTheme || 'light';
-  });
+  // Always default to light for now as requested
+  const [theme, setThemeState] = useState<Theme>('light');
 
   useEffect(() => {
-    localStorage.setItem('theme', theme);
+    // Force remove dark class on mount and whenever theme changes to light
     const root = window.document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
+    root.classList.remove('dark');
+    root.style.colorScheme = 'light';
+    
+    // Also clear any saved dark preference to ensure it stays light
+    if (localStorage.getItem('theme') === 'dark') {
+      localStorage.setItem('theme', 'light');
     }
   }, [theme]);
 
-  const toggleTheme = () => setThemeState((prev) => (prev === 'light' ? 'dark' : 'light'));
-  const setTheme = (newTheme: Theme) => setThemeState(newTheme);
+  const toggleTheme = () => {
+    // Disabled for now, or just keep it light
+    setThemeState('light');
+  };
+  
+  const setTheme = (newTheme: Theme) => {
+    // Only allow light for now
+    setThemeState('light');
+  };
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>

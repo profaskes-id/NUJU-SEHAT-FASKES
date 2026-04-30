@@ -9,3 +9,8 @@ export const login = async (payload: any) => {
 export const logout = async () => {
   await api.post('/auth/logout');
 };
+
+export const getMe = async () => {
+  const response = await api.get<LoginResponse>('/auth/me');
+  return response.data;
+};

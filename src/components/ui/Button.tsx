@@ -19,7 +19,7 @@ const Button: React.FC<ButtonProps> = ({
   const variants = {
     primary: 'bg-primary hover:bg-primary-hover text-text-inverse rounded-button px-4 py-2',
     ghost: 'bg-transparent text-text-muted hover:bg-surface-muted rounded-button px-4 py-2',
-    icon: 'bg-dark-bg text-text-inverse rounded-full p-2',
+    icon: 'bg-dark-bg text-text-inverse rounded-full p-2.5',
   };
 
   return (

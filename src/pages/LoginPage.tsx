@@ -30,7 +30,7 @@ const LoginPage: React.FC = () => {
   }, [isAuthenticated, navigate]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-surface-muted p-6">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-surface p-6">
       <div className="w-full max-w-[400px] space-y-8">
         <div className="flex flex-col items-center space-y-2">
           <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" />
@@ -40,7 +40,7 @@ const LoginPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-surface p-8 rounded-card shadow-sm border border-surface-border">
+        <div className="bg-surface-muted p-8 rounded-card">
           <LoginForm />
         </div>
 
