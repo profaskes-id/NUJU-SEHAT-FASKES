@@ -1,0 +1,9 @@
+[
+  { "id": "1", "nama_dokter": "dr. Budi Santosa", "spesialis": "Umum", "nomor_sip": "SIP/001/2024", "tanggal_expired_praktek": "2025-03-10", "status_praktek": "aktif", "is_suspend": 0, "total_konsultasi": 87, "rating": 4.9 },
+  { "id": "2", "nama_dokter": "dr. Sari Dewi", "spesialis": "Gigi", "nomor_sip": "SIP/002/2024", "tanggal_expired_praktek": "2026-08-01", "status_praktek": "aktif", "is_suspend": 0, "total_konsultasi": 74, "rating": 4.7 },
+  { "id": "3", "nama_dokter": "dr. Rizky Pratama", "spesialis": "Anak", "nomor_sip": "SIP/003/2024", "tanggal_expired_praktek": "2025-04-20", "status_praktek": "aktif", "is_suspend": 0, "total_konsultasi": 61, "rating": 4.8 },
+  { "id": "4", "nama_dokter": "dr. Maya Anggraini", "spesialis": "Kulit", "nomor_sip": "SIP/004/2024", "tanggal_expired_praktek": "2025-05-15", "status_praktek": "nonaktif", "is_suspend": 1, "total_konsultasi": 45, "rating": 4.5 },
+  { "id": "5", "nama_dokter": "dr. Hendra Kusuma", "spesialis": "Jantung", "nomor_sip": "SIP/005/2024", "tanggal_expired_praktek": "2026-12-31", "status_praktek": "aktif", "is_suspend": 0, "total_konsultasi": 39, "rating": 4.6 },
+  { "id": "6", "nama_dokter": "dr. Lina Marlina", "spesialis": "Umum", "nomor_sip": "SIP/006/2024", "tanggal_expired_praktek": "2025-06-30", "status_praktek": "aktif", "is_suspend": 0, "total_konsultasi": 55, "rating": 4.3 },
+  { "id": "7", "nama_dokter": "dr. Fajar Nugroho", "spesialis": "Mata", "nomor_sip": "SIP/007/2024", "tanggal_expired_praktek": "2024-12-01", "status_praktek": "nonaktif", "is_suspend": 0, "total_konsultasi": 20, "rating": 4.1 }
+]

@@ -3,13 +3,13 @@ import { Loader2 } from 'lucide-react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'ghost' | 'icon';
-  isLoading?: boolean;
+  loading?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
   children,
   variant = 'primary',
-  isLoading = false,
+  loading = false,
   className = '',
   disabled,
   ...props
@@ -25,10 +25,10 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       className={`${baseStyles} ${variants[variant]} ${className}`}
-      disabled={disabled || isLoading}
+      disabled={disabled || loading}
       {...props}
     >
-      {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+      {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
       {children}
     </button>
   );
