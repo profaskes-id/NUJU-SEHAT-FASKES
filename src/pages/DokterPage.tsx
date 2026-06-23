@@ -175,12 +175,15 @@ const DokterPage: React.FC = () => {
       {
         accessorKey: "rating_dokter",
         header: "Rating",
-        cell: (info) => (
-          <div className="flex items-center text-yellow-500 font-bold text-sm">
-            <Star className="w-3 h-3 fill-yellow-500 mr-1" />
-            {info.getValue() as string}
-          </div>
-        ),
+        cell: (info) => {
+          const val = parseFloat(info.getValue() as string);
+          return (
+            <div className="flex items-center text-yellow-500 font-bold text-sm">
+              <Star className="w-3 h-3 fill-yellow-500 mr-1" />
+              {val.toFixed(1)}
+            </div>
+          );
+        },
       },
       {
         id: "actions",
@@ -222,11 +225,7 @@ const DokterPage: React.FC = () => {
         icon={<Stethoscope className="w-5 h-5" />}
         title="Manajemen Dokter"
         description="Kelola informasi, status praktek, dan performa dokter."
-        actionButton={
-          <button className="bg-primary text-white px-4 py-2 rounded-button font-semibold text-sm shadow-sm hover:bg-primary-hover transition-colors">
-            + Tambah Dokter
-          </button>
-        }
+
       />
 
       {/* Filters: Bagian pencarian nama dan dropdown filter spesialisasi */}

@@ -1,7 +1,9 @@
 export interface AuthUser {
+  id: number;
   uuid: string;
   email: string;
   role: 'faskes';
+  id_faskes: string;
 }
 
 export interface LoginResponse {

@@ -2,43 +2,53 @@
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* Primary */
-  --color-primary: #9689e8;
-  --color-primary-hover: #7c6fd4;
-  --color-primary-light: #ede9fb;
+  /* Primary — Deep Indigo (professional, trustworthy) */
+  --color-primary: #4F46E5;
+  --color-primary-hover: #4338CA;
+  --color-primary-light: #EEF2FF;
 
-  /* Surface */
-  --color-surface: #ffffff;
-  --color-surface-muted: #f7f7f7;
-  --color-surface-border: #e4e4e7;
+  /* Sidebar — Dark Navy (distinct from content) */
+  --color-sidebar: #0F172A;
+  --color-sidebar-hover: #1E293B;
+  --color-sidebar-text: #94A3B8;
+  --color-sidebar-text-active: #FFFFFF;
+  --color-sidebar-active: #4F46E5;
+  --color-sidebar-border: #1E293B;
+
+  /* Surface — Clean Light Content */
+  --color-surface: #FFFFFF;
+  --color-surface-muted: #F8FAFC;
+  --color-surface-border: #E2E8F0;
 
   /* Text */
-  --color-text: #18181b;
-  --color-text-muted: #71717a;
-  --color-text-inverse: #ffffff;
+  --color-text: #0F172A;
+  --color-text-muted: #64748B;
+  --color-text-inverse: #FFFFFF;
 
-  /* Dark */
-  --color-dark-bg: #0f0f13;
-  --color-dark-surface: #1a1a24;
-  --color-dark-card: #23232f;
-  --color-dark-border: #2e2e3d;
-  --color-dark-text: #e4e4f0;
+  /* Dark Mode — Slate-based */
+  --color-dark-bg: #0F172A;
+  --color-dark-surface: #1E293B;
+  --color-dark-card: #334155;
+  --color-dark-border: #475569;
+  --color-dark-text: #F1F5F9;
 
   /* Border Radius */
-  --radius-card: 1.5rem;
-  --radius-button: 0.75rem;
+  --radius-card: 1rem;
+  --radius-button: 0.625rem;
   --radius-input: 0.5rem;
-  --radius-sidebar: 0.75rem;
+  --radius-sidebar: 0.5rem;
 
   /* Font */
   --font-sans: "Outfit", sans-serif;
 }
 
 .dark {
-  --color-surface: #1a1a24;
-  --color-surface-muted: #23232f;
-  --color-surface-border: #2e2e3d;
-  --color-text: #e4e4f0;
+  --color-surface: #1E293B;
+  --color-surface-muted: #0F172A;
+  --color-surface-border: #475569;
+  --color-text: #F1F5F9;
+  --color-text-muted: #94A3B8;
+  --color-text-inverse: #0F172A;
 }
 
 @layer base {
@@ -53,10 +63,10 @@
 
 @layer utilities {
   .custom-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
   .custom-scrollbar::-webkit-scrollbar {
-    display: none; /* Chrome, Safari and Opera */
+    display: none;
   }
 }

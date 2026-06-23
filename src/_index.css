@@ -1,0 +1,62 @@
+@import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Primary */
+  --color-primary: #9689e8;
+  --color-primary-hover: #7c6fd4;
+  --color-primary-light: #ede9fb;
+
+  /* Surface */
+  --color-surface: #ffffff;
+  --color-surface-muted: #f7f7f7;
+  --color-surface-border: #e4e4e7;
+
+  /* Text */
+  --color-text: #18181b;
+  --color-text-muted: #71717a;
+  --color-text-inverse: #ffffff;
+
+  /* Dark */
+  --color-dark-bg: #0f0f13;
+  --color-dark-surface: #1a1a24;
+  --color-dark-card: #23232f;
+  --color-dark-border: #2e2e3d;
+  --color-dark-text: #e4e4f0;
+
+  /* Border Radius */
+  --radius-card: 1.5rem;
+  --radius-button: 0.75rem;
+  --radius-input: 0.5rem;
+  --radius-sidebar: 0.75rem;
+
+  /* Font */
+  --font-sans: "Outfit", sans-serif;
+}
+
+.dark {
+  --color-surface: #1a1a24;
+  --color-surface-muted: #23232f;
+  --color-surface-border: #2e2e3d;
+  --color-text: #e4e4f0;
+}
+
+@layer base {
+  body {
+    @apply bg-surface text-text font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-text font-semibold;
+  }
+}
+
+@layer utilities {
+  .custom-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+}

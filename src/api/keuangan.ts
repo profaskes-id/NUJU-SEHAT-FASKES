@@ -3,7 +3,9 @@ import type {
   MarginResponse,
   DiskonResponse,
   UpdateMarginPayload,
-  UpdateDiskonPayload
+  UpdateDiskonPayload,
+  WalletResponse,
+  WalletTransactionResponse,
 } from '@/features/keuangan/types';
 
 /**
@@ -51,5 +53,25 @@ export const getDiskonFaskes = async (id_faskes: string): Promise<DiskonResponse
  */
 export const updateDiskonFaskes = async (id_faskes: string, payload: UpdateDiskonPayload): Promise<any> => {
   const response = await api.post(`/faskes/${id_faskes}/diskon`, payload);
+  return response.data;
+};
+
+export const getWalletSaldo = async (
+  ownerType: string,
+  ownerId: number,
+): Promise<WalletResponse> => {
+  const response = await api.get<WalletResponse>('/wallet/saldo', {
+    params: { owner_type: ownerType, owner_id: ownerId },
+  });
+  return response.data;
+};
+
+export const getWalletTransactions = async (
+  ownerType: string,
+  ownerId: number,
+): Promise<WalletTransactionResponse> => {
+  const response = await api.get<WalletTransactionResponse>('/wallet/transactions', {
+    params: { owner_type: ownerType, owner_id: ownerId },
+  });
   return response.data;
 };

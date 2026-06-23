@@ -13,7 +13,6 @@ import {
   CreditCard,
   Settings,
   Building2,
-  Users,
   Bell,
   ChevronDown,
   ChevronUp,
@@ -71,7 +70,6 @@ const menuItems: MenuItem[] = [
     icon: Settings,
     children: [
       { title: "Profile Faskes", icon: Building2, path: "/pengaturan/profile" },
-      { title: "Manajemen User", icon: Users, path: "/pengaturan/users" },
     ],
   },
   {
@@ -109,27 +107,27 @@ const SidebarItem: React.FC<{ item: MenuItem }> = ({ item }) => {
   };
 
   const baseClasses =
-    "flex items-center px-3 py-2.5 transition-all duration-200 cursor-pointer mb-1 rounded-full";
-  const inactiveClasses = "text-text-muted hover:bg-surface-muted";
-  const activeParentClasses = "bg-primary text-white font-medium";
-  const activeChildClasses = "bg-primary-light text-primary font-medium";
+    "flex items-center px-3 py-2.5 transition-all duration-200 cursor-pointer mb-1 rounded-sidebar";
+  const inactiveClasses = "text-sidebar-text hover:bg-sidebar-hover";
+  const activeParentClasses = "bg-sidebar-active text-sidebar-text-active font-medium";
+  const activeChildClasses = "bg-sidebar-active/10 text-sidebar-text-active font-medium";
 
   const renderContent = (active: boolean, isChild: boolean = false) => (
     <div className="flex items-center justify-between w-full">
       <div className="flex items-center space-x-3">
         <item.icon
-          className={`w-4 h-4 shrink-0 ${active ? (isChild ? "text-primary" : "text-white") : "text-text-muted"}`}
+          className={`w-4 h-4 shrink-0 ${active ? "text-sidebar-text-active" : "text-sidebar-text"}`}
         />
         <span className="text-sm">{item.title}</span>
       </div>
       {hasChildren &&
         (isOpen ? (
           <ChevronUp
-            className={`w-3.5 h-3.5 ${active ? "text-white" : "text-text-muted"}`}
+            className={`w-3.5 h-3.5 ${active ? "text-sidebar-text-active" : "text-sidebar-text"}`}
           />
         ) : (
           <ChevronDown
-            className={`w-3.5 h-3.5 ${active ? "text-white" : "text-text-muted"}`}
+            className={`w-3.5 h-3.5 ${active ? "text-sidebar-text-active" : "text-sidebar-text"}`}
           />
         ))}
     </div>
@@ -140,22 +138,22 @@ const SidebarItem: React.FC<{ item: MenuItem }> = ({ item }) => {
       <div>
         <div
           onClick={toggleDropdown}
-          className={`${baseClasses} ${isChildActive ? activeParentClasses : isOpen ? "text-text bg-surface-muted" : inactiveClasses}`}
+          className={`${baseClasses} ${isChildActive ? activeParentClasses : isOpen ? "text-sidebar-text-active bg-sidebar-hover" : inactiveClasses}`}
         >
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center space-x-3">
               <item.icon
-                className={`w-4 h-4 shrink-0 ${isChildActive ? "text-white" : "text-text-muted"}`}
+                className={`w-4 h-4 shrink-0 ${isChildActive ? "text-sidebar-text-active" : "text-sidebar-text"}`}
               />
               <span className="text-sm">{item.title}</span>
             </div>
             {isOpen ? (
               <ChevronUp
-                className={`w-3.5 h-3.5 ${isChildActive ? "text-white" : "text-text-muted"}`}
+                className={`w-3.5 h-3.5 ${isChildActive ? "text-sidebar-text-active" : "text-sidebar-text"}`}
               />
             ) : (
               <ChevronDown
-                className={`w-3.5 h-3.5 ${isChildActive ? "text-white" : "text-text-muted"}`}
+                className={`w-3.5 h-3.5 ${isChildActive ? "text-sidebar-text-active" : "text-sidebar-text"}`}
               />
             )}
           </div>
@@ -173,7 +171,7 @@ const SidebarItem: React.FC<{ item: MenuItem }> = ({ item }) => {
                 {({ isActive }) => (
                   <div className="flex items-center space-x-3">
                     <child.icon
-                      className={`w-4 h-4 shrink-0 ${isActive ? "text-primary" : "text-text-muted"}`}
+                      className={`w-4 h-4 shrink-0 ${isActive ? "text-sidebar-text-active" : "text-sidebar-text"}`}
                     />
                     <span className="text-sm">{child.title}</span>
                   </div>
@@ -197,7 +195,7 @@ const SidebarItem: React.FC<{ item: MenuItem }> = ({ item }) => {
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center space-x-3">
             <item.icon
-              className={`w-4 h-4 shrink-0 ${isActive ? "text-white" : "text-text-muted"}`}
+              className={`w-4 h-4 shrink-0 ${isActive ? "text-sidebar-text-active" : "text-sidebar-text"}`}
             />
             <span className="text-sm">{item.title}</span>
           </div>
@@ -211,11 +209,11 @@ const Sidebar: React.FC = () => {
   const { user, logout } = useAuthStore();
 
   return (
-    <aside className="w-56 h-screen fixed left-0 top-0 bg-surface dark:bg-dark-surface flex flex-col z-50">
+    <aside className="w-56 h-screen fixed left-0 top-0 bg-sidebar flex flex-col z-50">
       {/* Header */}
       <div className="p-6 flex items-center space-x-3">
-        <img src="/logo.png" alt="Logo" className="w-8 h-8 object-contain" />
-        <span className="text-lg font-bold text-text tracking-tight uppercase">
+        <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" />
+        <span className="text-white text-lg font-bold text-text tracking-tight uppercase">
           Nuju Sehat
         </span>
       </div>
@@ -238,23 +236,23 @@ const Sidebar: React.FC = () => {
       </nav>
 
       {/* User Info & Logout */}
-      <div className="p-4 mt-auto border-t border-surface-border dark:border-dark-border">
+      <div className="p-4 mt-auto border-t border-sidebar-border">
         <div className="flex items-center p-2 space-x-3 mb-2">
-          <div className="w-9 h-9 rounded-full bg-primary-light flex items-center justify-center text-primary font-bold">
+          <div className="w-9 h-9 rounded-full bg-sidebar-active flex items-center justify-center text-sidebar-text-active font-bold">
             {user?.email?.[0].toUpperCase() || "U"}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-text truncate">
+            <p className="text-sm font-semibold text-sidebar-text-active truncate">
               {user?.email?.split("@")[0] || "User"}
             </p>
-            <p className="text-[10px] text-text-muted uppercase font-bold tracking-wider">
+            <p className="text-[10px] text-sidebar-text uppercase font-bold tracking-wider">
               {user?.role || "Faskes Admin"}
             </p>
           </div>
         </div>
         <button 
           onClick={logout}
-          className="flex items-center w-full px-3 py-2 text-sm text-red-500 hover:bg-red-50 rounded-full transition-colors"
+          className="flex items-center w-full px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 rounded-sidebar transition-colors"
         >
           <LogOut className="w-4 h-4 mr-3" />
           Keluar

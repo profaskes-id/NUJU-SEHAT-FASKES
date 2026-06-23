@@ -61,3 +61,67 @@ export interface DokterDetailResponse {
   message: string;
   data: DokterDetail;
 }
+
+export interface InvitedDokter {
+  id_invite: string;
+  id_faskes: string;
+  email_dokter: string;
+  nomor_hp_dokter: string;
+  token_invite: string;
+  status: string;
+  accepted_at: string | null;
+  created_at: string;
+  created_by: string | null;
+  nama_faskes: string;
+}
+
+export interface InviteDokterListResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: {
+    items: InvitedDokter[];
+    pagination: Pagination;
+  };
+}
+
+export interface CreateInviteDokterPayload {
+  id_faskes: string;
+  email_dokter: string;
+  nomor_hp_dokter: string;
+}
+
+export interface CreateInviteDokterResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: InvitedDokter;
+}
+
+export interface RequestDokter {
+  id_request_dokter: string;
+  id_dokter: string;
+  nomor_sip: string;
+  id_faskes: string;
+  status: string;
+  created_at: string;
+  accepted_at: string | null;
+  nama_dokter: string;
+  nama_faskes: string;
+}
+
+export interface RequestDokterListResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: {
+    items: RequestDokter[];
+    pagination: Pagination;
+  };
+}
+
+export interface ApproveRejectResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+}

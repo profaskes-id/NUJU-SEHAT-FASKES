@@ -7,7 +7,13 @@ const DashboardPage = lazy(() => import('@/pages/DashboardPage'))
 const AppShell = lazy(() => import('@/components/layout/AppShell'))
 const DokterPage = lazy(() => import('@/pages/DokterPage'))
 const DokterDetailPage = lazy(() => import('@/pages/DokterDetailPage'))
+const InviteDokterPage = lazy(() => import('@/pages/InviteDokterPage'))
+const RequestDokterPage = lazy(() => import('@/pages/RequestDokterPage'))
 const MarginDiskonPage = lazy(() => import('@/pages/MarginDiskonPage'))
+const WalletPage = lazy(() => import('@/pages/WalletPage'))
+const MonitoringPage = lazy(() => import('@/pages/MonitoringPage'))
+const MonitoringDetailPage = lazy(() => import('@/pages/MonitoringDetailPage'))
+const ProfileFaskesPage = lazy(() => import('@/pages/ProfileFaskesPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 
 export const router = createBrowserRouter([
@@ -40,8 +46,32 @@ export const router = createBrowserRouter([
         element: <DokterPage />,
       },
       {
+        path: 'dokter/invite',
+        element: <InviteDokterPage />,
+      },
+      {
+        path: 'dokter/request',
+        element: <RequestDokterPage />,
+      },
+      {
         path: 'dokter/:id',
         element: <DokterDetailPage />,
+      },
+      {
+        path: 'konsultasi/monitoring',
+        element: <MonitoringPage />,
+      },
+      {
+        path: 'konsultasi/monitoring/:id',
+        element: <MonitoringDetailPage />,
+      },
+      {
+        path: 'keuangan/wallet',
+        element: <WalletPage />,
+      },
+      {
+        path: 'pengaturan/profile',
+        element: <ProfileFaskesPage />,
       },
       {
         path: 'keuangan/margin',

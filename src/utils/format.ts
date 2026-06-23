@@ -27,3 +27,16 @@ export const formatDate = (dateString: string): string => {
     day: "numeric",
   });
 };
+
+export const formatDateTime = (dateString: string): string => {
+  if (!dateString) return "-";
+  const date = new Date(dateString);
+  return date.toLocaleDateString("id-ID", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }) + " " + date.toLocaleTimeString("id-ID", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
