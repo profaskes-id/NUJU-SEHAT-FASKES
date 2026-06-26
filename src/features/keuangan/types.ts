@@ -86,3 +86,90 @@ export interface WalletTransactionResponse {
     items: WalletTransaction[];
   };
 }
+
+export interface WithdrawPayload {
+  nama_pemilik: string;
+  nama_bank: string;
+  nomor_rekening: string;
+  jumlah: number;
+}
+
+export interface RekeningTersimpan {
+  id_rekening_tersimpan: string;
+  api_user_id: number;
+  nama_pemilik: string;
+  nama_bank: string;
+  nomor_rekening: string;
+  is_aktif: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateRekeningTersimpanPayload {
+  api_user_id: number;
+  nama_pemilik: string;
+  nama_bank: string;
+  nomor_rekening: string;
+}
+
+export interface WithdrawRequestSavedPayload {
+  id_user: number;
+  amount: number;
+  id_rekening_tersimpan: string;
+}
+
+export interface WithdrawRequestNewPayload {
+  amount: number;
+  id_user: number;
+  nama_bank: string;
+  nomor_rekening: string;
+  atas_nama_rekening: string;
+  simpan_rekening?: boolean;
+}
+
+export interface WithdrawRequestItem {
+  id_withdraw_requests: string;
+  id_user: number;
+  amount: number;
+  tipe_pemilik: string;
+  status: string;
+  nama_bank: string;
+  nomor_rekening: string;
+  atas_nama_rekening: string;
+  requested_at: string;
+  nama_pemohon: string;
+}
+
+export interface WithdrawRequestListResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: {
+    items: WithdrawRequestItem[];
+    pagination: {
+      page: number;
+      limit: number;
+      totalItems: number;
+      totalPages: number;
+      hasNextPage: boolean;
+      nextPage: number | null;
+    };
+  };
+}
+
+export interface RekeningTersimpanResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: {
+    items: RekeningTersimpan[];
+    pagination: {
+      page: number;
+      limit: number;
+      totalItems: number;
+      totalPages: number;
+      hasNextPage: boolean;
+      nextPage: number | null;
+    };
+  };
+}

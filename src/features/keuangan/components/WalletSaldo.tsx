@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Eye, EyeOff, Wallet, ArrowUpRight, RefreshCw } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff, Wallet, ArrowUpRight, RefreshCw, History } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getWalletSaldo } from "@/api/keuangan";
 import { useAuthStore } from "@/store/authStore";
@@ -11,6 +12,7 @@ const formatRupiah = (num: number) =>
   new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(num);
 
 const WalletSaldo: React.FC = () => {
+  const navigate = useNavigate();
   const { user } = useAuthStore();
   const [showSaldo, setShowSaldo] = useState(true);
 
@@ -79,10 +81,22 @@ const WalletSaldo: React.FC = () => {
             </div>
           </div>
 
-          <button className="inline-flex items-center space-x-2 bg-white/20 hover:bg-white/30 text-white rounded-button px-4 py-2 text-sm font-semibold transition-colors backdrop-blur-sm">
-            <ArrowUpRight className="w-4 h-4" />
-            <span>Ajukan Withdraw</span>
-          </button>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => navigate("/keuangan/wallet/withdraw")}
+              className="inline-flex items-center space-x-2 bg-white/20 hover:bg-white/30 text-white rounded-button px-4 py-2 text-sm font-semibold transition-colors backdrop-blur-sm"
+            >
+              <ArrowUpRight className="w-4 h-4" />
+              <span>Ajukan Withdraw</span>
+            </button>
+            <button
+              onClick={() => navigate("/keuangan/wallet/withdraw/riwayat")}
+              className="inline-flex items-center space-x-2 bg-white/10 hover:bg-white/20 text-white/80 hover:text-white rounded-button px-4 py-2 text-sm font-semibold transition-colors backdrop-blur-sm"
+            >
+              <History className="w-4 h-4" />
+              <span>Riwayat</span>
+            </button>
+          </div>
         </div>
       </div>
 

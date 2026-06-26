@@ -5,8 +5,6 @@ import WalletSaldo from "@/features/keuangan/components/WalletSaldo";
 import WalletTransactionTable from "@/features/keuangan/components/WalletTransactionTable";
 
 const WalletPage: React.FC = () => {
-
-
   return (
     <div className="min-h-screen bg-surface p-6 space-y-6">
       <PageHeader

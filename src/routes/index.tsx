@@ -11,6 +11,8 @@ const InviteDokterPage = lazy(() => import('@/pages/InviteDokterPage'))
 const RequestDokterPage = lazy(() => import('@/pages/RequestDokterPage'))
 const MarginDiskonPage = lazy(() => import('@/pages/MarginDiskonPage'))
 const WalletPage = lazy(() => import('@/pages/WalletPage'))
+const AjukanWithdrawPage = lazy(() => import('@/pages/AjukanWithdrawPage'))
+const RiwayatWithdrawPage = lazy(() => import('@/pages/RiwayatWithdrawPage'))
 const MonitoringPage = lazy(() => import('@/pages/MonitoringPage'))
 const MonitoringDetailPage = lazy(() => import('@/pages/MonitoringDetailPage'))
 const ProfileFaskesPage = lazy(() => import('@/pages/ProfileFaskesPage'))
@@ -68,6 +70,14 @@ export const router = createBrowserRouter([
       {
         path: 'keuangan/wallet',
         element: <WalletPage />,
+      },
+      {
+        path: 'keuangan/wallet/withdraw',
+        element: <AjukanWithdrawPage />,
+      },
+      {
+        path: 'keuangan/wallet/withdraw/riwayat',
+        element: <RiwayatWithdrawPage />,
       },
       {
         path: 'pengaturan/profile',

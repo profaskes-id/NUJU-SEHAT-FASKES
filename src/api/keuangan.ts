@@ -6,6 +6,12 @@ import type {
   UpdateDiskonPayload,
   WalletResponse,
   WalletTransactionResponse,
+  WithdrawPayload,
+  RekeningTersimpanResponse,
+  CreateRekeningTersimpanPayload,
+  WithdrawRequestSavedPayload,
+  WithdrawRequestNewPayload,
+  WithdrawRequestListResponse,
 } from '@/features/keuangan/types';
 
 /**
@@ -72,6 +78,37 @@ export const getWalletTransactions = async (
 ): Promise<WalletTransactionResponse> => {
   const response = await api.get<WalletTransactionResponse>('/wallet/transactions', {
     params: { owner_type: ownerType, owner_id: ownerId },
+  });
+  return response.data;
+};
+
+export const submitWithdraw = async (payload: WithdrawPayload): Promise<any> => {
+  const response = await api.post('/wallet/withdraw', payload);
+  return response.data;
+};
+
+export const getRekeningTersimpan = async (apiUserId: number): Promise<RekeningTersimpanResponse> => {
+  const response = await api.get<RekeningTersimpanResponse>('/rekening-tersimpan', {
+    params: { api_user_id: apiUserId },
+  });
+  return response.data;
+};
+
+export const createRekeningTersimpan = async (payload: CreateRekeningTersimpanPayload): Promise<any> => {
+  const response = await api.post('/rekening-tersimpan', payload);
+  return response.data;
+};
+
+export const createWithdrawRequest = async (
+  payload: WithdrawRequestSavedPayload | WithdrawRequestNewPayload,
+): Promise<any> => {
+  const response = await api.post('/withdraw-request/create', payload);
+  return response.data;
+};
+
+export const getWithdrawRequestList = async (idUser: number): Promise<WithdrawRequestListResponse> => {
+  const response = await api.get<WithdrawRequestListResponse>('/withdraw-request/index', {
+    params: { id_user: idUser },
   });
   return response.data;
 };
