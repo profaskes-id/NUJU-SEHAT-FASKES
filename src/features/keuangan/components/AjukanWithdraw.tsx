@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { getWalletSaldo } from "@/api/keuangan";
 import { useAuthStore } from "@/store/authStore";
 import { useRekeningTersimpan, useCreateRekeningTersimpan, useCreateWithdrawRequest } from "@/features/keuangan/hooks/useRekeningTersimpan";
+import PinModal from "@/features/keuangan/components/PinModal";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import LoadingState from "@/components/shared/LoadingState";
@@ -32,6 +33,8 @@ const AjukanWithdraw: React.FC = () => {
   const [tambahNomorRekening, setTambahNomorRekening] = useState("");
   const [selectedRekening, setSelectedRekening] = useState<string>("");
   const [tersimpanJumlah, setTersimpanJumlah] = useState("");
+  const [isPinModalOpen, setIsPinModalOpen] = useState(false);
+  const [pendingWithdraw, setPendingWithdraw] = useState<"baru" | "tersimpan" | null>(null);
 
   const createRekening = useCreateRekeningTersimpan(user?.id);
   const withdrawRequest = useCreateWithdrawRequest(user?.id);
@@ -49,7 +52,11 @@ const AjukanWithdraw: React.FC = () => {
   const { data: rekeningData, isLoading: isRekeningLoading } = useRekeningTersimpan(user?.id);
 
   const wallet = walletResponse?.data;
+  const saldo = wallet?.saldo ?? 0;
   const rekeningList = rekeningData?.data?.items ?? [];
+
+  const jumlahMelebihiSaldo = Number(jumlahPenarikan) > saldo;
+  const tersimpanMelebihiSaldo = Number(tersimpanJumlah) > saldo;
 
   const tabs: { key: TabKey; label: string }[] = [
     { key: "rekening-baru", label: "Rekening Baru" },
@@ -75,40 +82,52 @@ const AjukanWithdraw: React.FC = () => {
 
   const handleAjukanWithdrawBaru = async () => {
     if (!namaPemilik || !namaBank || !nomorRekening || !jumlahPenarikan) return;
-    try {
-      await withdrawRequest.mutateAsync({
-        amount: Number(jumlahPenarikan),
-        id_user: user!.id,
-        nama_bank: namaBank,
-        nomor_rekening: nomorRekening,
-        atas_nama_rekening: namaPemilik,
-        simpan_rekening: simpanRekening || undefined,
-      });
-      toast.success("Withdraw berhasil diajukan");
-      setNamaPemilik("");
-      setNamaBank("");
-      setNomorRekening("");
-      setJumlahPenarikan("");
-      setSimpanRekening(false);
-    } catch {
-      toast.error("Gagal mengajukan withdraw");
-    }
+    setPendingWithdraw("baru");
+    setIsPinModalOpen(true);
   };
 
   const handleAjukanWithdrawTersimpan = async () => {
     if (!selectedRekening || !tersimpanJumlah) return;
-    try {
-      await withdrawRequest.mutateAsync({
-        id_user: user!.id,
-        amount: Number(tersimpanJumlah),
-        id_rekening_tersimpan: selectedRekening,
-      });
-      toast.success("Withdraw berhasil diajukan");
-      setSelectedRekening("");
-      setTersimpanJumlah("");
-    } catch {
-      toast.error("Gagal mengajukan withdraw");
+    setPendingWithdraw("tersimpan");
+    setIsPinModalOpen(true);
+  };
+
+  const handlePinSuccess = async () => {
+    setIsPinModalOpen(false);
+    if (pendingWithdraw === "baru") {
+      try {
+        await withdrawRequest.mutateAsync({
+          amount: Number(jumlahPenarikan),
+          id_user: user!.id,
+          nama_bank: namaBank,
+          nomor_rekening: nomorRekening,
+          atas_nama_rekening: namaPemilik,
+          simpan_rekening: simpanRekening || undefined,
+        });
+        toast.success("Withdraw berhasil diajukan");
+        setNamaPemilik("");
+        setNamaBank("");
+        setNomorRekening("");
+        setJumlahPenarikan("");
+        setSimpanRekening(false);
+      } catch {
+        toast.error("Gagal mengajukan withdraw");
+      }
+    } else if (pendingWithdraw === "tersimpan") {
+      try {
+        await withdrawRequest.mutateAsync({
+          id_user: user!.id,
+          amount: Number(tersimpanJumlah),
+          id_rekening_tersimpan: selectedRekening,
+        });
+        toast.success("Withdraw berhasil diajukan");
+        setSelectedRekening("");
+        setTersimpanJumlah("");
+      } catch {
+        toast.error("Gagal mengajukan withdraw");
+      }
     }
+    setPendingWithdraw(null);
   };
 
   if (isWalletLoading) return <LoadingState message="Memuat data..." />;
@@ -215,6 +234,11 @@ const AjukanWithdraw: React.FC = () => {
                   setJumlahPenarikan(val);
                 }}
               />
+              {jumlahMelebihiSaldo && jumlahPenarikan && (
+                <p className="text-[10px] text-red-500 mt-1">
+                  Jumlah penarikan tidak boleh melebihi saldo ({formatRupiah(saldo)})
+                </p>
+              )}
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -250,7 +274,7 @@ const AjukanWithdraw: React.FC = () => {
             <Button
               onClick={handleAjukanWithdrawBaru}
               loading={withdrawRequest.isPending}
-              disabled={!namaPemilik || !namaBank || !nomorRekening || !jumlahPenarikan}
+              disabled={!namaPemilik || !namaBank || !nomorRekening || !jumlahPenarikan || jumlahMelebihiSaldo}
             >
               <ArrowUpRight className="w-4 h-4 mr-2" />
               Ajukan Withdraw
@@ -380,6 +404,11 @@ const AjukanWithdraw: React.FC = () => {
                         setTersimpanJumlah(val);
                       }}
                     />
+                    {tersimpanMelebihiSaldo && tersimpanJumlah && (
+                      <p className="text-[10px] text-red-500 mt-1">
+                        Jumlah penarikan tidak boleh melebihi saldo ({formatRupiah(saldo)})
+                      </p>
+                    )}
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {QUICK_AMOUNTS.map((q) => (
@@ -400,7 +429,7 @@ const AjukanWithdraw: React.FC = () => {
                     <Button
                       onClick={handleAjukanWithdrawTersimpan}
                       loading={withdrawRequest.isPending}
-                      disabled={!tersimpanJumlah}
+                      disabled={!tersimpanJumlah || tersimpanMelebihiSaldo}
                     >
                       <ArrowUpRight className="w-4 h-4 mr-2" />
                       Ajukan Withdraw
@@ -412,6 +441,12 @@ const AjukanWithdraw: React.FC = () => {
           )}
         </div>
       )}
+
+      <PinModal
+        isOpen={isPinModalOpen}
+        onClose={() => { setIsPinModalOpen(false); setPendingWithdraw(null); }}
+        onSuccess={handlePinSuccess}
+      />
     </div>
   );
 };

@@ -120,6 +120,26 @@ export interface RequestDokterListResponse {
   };
 }
 
+export interface ReviewDokter {
+  id_review_dokter: string;
+  id_dokter: string;
+  id_customer: string;
+  nama_customer: string;
+  bintang: number;
+  ulasan: string;
+  created_at: string;
+}
+
+export interface ReviewDokterResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: {
+    items: ReviewDokter[];
+    pagination: Pagination;
+  };
+}
+
 export interface ApproveRejectResponse {
   success: boolean;
   statusCode: number;

@@ -7,6 +7,7 @@ import type {
   CreateInviteDokterResponse,
   RequestDokterListResponse,
   ApproveRejectResponse,
+  ReviewDokterResponse,
 } from '@/features/dokter/types';
 
 export const getDokterByFaskes = async (id_faskes: string): Promise<DokterResponse> => {
@@ -65,5 +66,10 @@ export const rejectRequestDokter = async (
     `/request-dokter/${id_request_dokter}/reject`,
     { id_faskes },
   );
+  return response.data;
+};
+
+export const getReviewDokter = async (idDokter: string): Promise<ReviewDokterResponse> => {
+  const response = await api.get<ReviewDokterResponse>(`/review-dokter/${idDokter}`);
   return response.data;
 };

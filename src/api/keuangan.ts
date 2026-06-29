@@ -112,3 +112,8 @@ export const getWithdrawRequestList = async (idUser: number): Promise<WithdrawRe
   });
   return response.data;
 };
+
+export const verifyPin = async (payload: { id_user: number; nomor_pin: string }): Promise<any> => {
+  const response = await api.post('/auth/pin/verify', payload);
+  return response.data;
+};

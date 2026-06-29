@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ChevronLeft, Stethoscope } from "lucide-react";
 import { useDokterDetail } from "@/features/dokter/hooks/useDokterDetail";
 import DokterDetailCard from "@/features/dokter/components/DokterDetailCard";
+import ReviewDokterTable from "@/features/dokter/components/ReviewDokterTable";
 import LoadingState from "@/components/shared/LoadingState";
 import ErrorState from "@/components/shared/ErrorState";
 import PageHeader from "@/components/shared/PageHeader";
@@ -55,7 +56,10 @@ const DokterDetailPage: React.FC = () => {
         )}
 
         {!isLoading && !isError && response?.data && (
-          <DokterDetailCard dokter={response.data} />
+          <>
+            <DokterDetailCard dokter={response.data} />
+            <ReviewDokterTable idDokter={id || ""} />
+          </>
         )}
       </div>
     </div>

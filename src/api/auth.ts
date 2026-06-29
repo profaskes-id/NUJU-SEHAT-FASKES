@@ -14,3 +14,8 @@ export const getMe = async () => {
   const response = await api.get<LoginResponse>('/auth/me');
   return response.data;
 };
+
+export const createPin = async (payload: { id_user: number; nomor_pin: string }): Promise<any> => {
+  const response = await api.post('/auth/pin/create', payload);
+  return response.data;
+};

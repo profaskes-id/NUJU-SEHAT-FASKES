@@ -16,6 +16,7 @@ const RiwayatWithdrawPage = lazy(() => import('@/pages/RiwayatWithdrawPage'))
 const MonitoringPage = lazy(() => import('@/pages/MonitoringPage'))
 const MonitoringDetailPage = lazy(() => import('@/pages/MonitoringDetailPage'))
 const ProfileFaskesPage = lazy(() => import('@/pages/ProfileFaskesPage'))
+const PinSettingsPage = lazy(() => import('@/pages/PinSettingsPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 
 export const router = createBrowserRouter([
@@ -82,6 +83,10 @@ export const router = createBrowserRouter([
       {
         path: 'pengaturan/profile',
         element: <ProfileFaskesPage />,
+      },
+      {
+        path: 'pengaturan/pin',
+        element: <PinSettingsPage />,
       },
       {
         path: 'keuangan/margin',
