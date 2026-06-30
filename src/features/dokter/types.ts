@@ -5,6 +5,7 @@ export interface Dokter {
   status_praktek: number;
   tanggal_expired_praktek: string;
   tipe_dokter: string;
+  spesialis_dokter: string | null;
   jenis_kelamin: string;
   is_suspend: number;
   rating_dokter: string;
@@ -141,6 +142,27 @@ export interface ReviewDokterResponse {
 }
 
 export interface ApproveRejectResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+}
+
+export interface RequestDokterDetailResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: RequestDokter;
+}
+
+export interface RespondRequestPayload {
+  status: "accepted" | "rejected";
+  is_aktif: number;
+  tanggal_mulai_praktek?: string;
+  tanggal_expired_praktek?: string;
+  tipe_dokter?: string;
+}
+
+export interface RespondRequestResponse {
   success: boolean;
   statusCode: number;
   message: string;

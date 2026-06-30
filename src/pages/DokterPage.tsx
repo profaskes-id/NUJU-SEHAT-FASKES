@@ -30,19 +30,23 @@ import PageHeader from "@/components/shared/PageHeader";
 
 /**
  * DokterPage - Halaman utama Manajemen Dokter.
- * Menampilkan daftar dokter dalam format tabel dengan fitur pencarian, filter, dan pagination.
+ * Menampilkan daftar dokter dalam format tabel dengan fitur pencarian, filter status, dan pagination.
  */
 const DokterPage: React.FC = () => {
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const [globalFilter, setGlobalFilter] = useState("");
-  const [specialtyFilter, setSpecialtyFilter] = useState("Semua Tipe");
+  const [statusFilter, setStatusFilter] = useState("Semua Status");
 
   /**
    * Mengambil data dokter dari API menggunakan React Query.
    * Query ini akan otomatis berjalan saat id_faskes tersedia.
    */
-  const { data: dokterResponse, isLoading, isError } = useQuery({
+  const {
+    data: dokterResponse,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["dokter", user?.id_faskes],
     queryFn: () => getDokterByFaskes(user?.id_faskes || ""),
     enabled: !!user?.id_faskes,
@@ -51,8 +55,8 @@ const DokterPage: React.FC = () => {
   const doctors = dokterResponse?.data.items || [];
 
   /**
-   * filteredData - Logika filter data dokter berdasarkan nama dan tipe dokter.
-   * Dihitung ulang hanya jika data API, globalFilter, atau specialtyFilter berubah.
+   * filteredData - Logika filter data dokter berdasarkan nama dan status (aktif/suspend).
+   * Dihitung ulang hanya jika data API, globalFilter, atau statusFilter berubah.
    */
   const filteredData = useMemo(() => {
     let data = [...doctors];
@@ -63,24 +67,32 @@ const DokterPage: React.FC = () => {
       );
     }
 
-    if (specialtyFilter !== "Semua Tipe") {
-      data = data.filter((d) => d.tipe_dokter === specialtyFilter);
+    if (statusFilter === "Aktif") {
+      data = data.filter((d) => d.is_aktif === 1 && d.is_suspend === 0);
+    } else if (statusFilter === "Tidak Aktif") {
+      data = data.filter((d) => d.is_aktif === 0);
+    } else if (statusFilter === "Suspend") {
+      data = data.filter((d) => d.is_suspend === 1);
     }
 
     return data;
-  }, [doctors, globalFilter, specialtyFilter]);
+  }, [doctors, globalFilter, statusFilter]);
+
+  const statusOptions = ["Semua Status", "Aktif", "Tidak Aktif", "Suspend"];
 
   /**
-   * specialties - Mendapatkan daftar unik tipe dokter untuk keperluan dropdown filter.
+   * formatRating - Membulatkan rating ke 1 angka desimal (contoh: 5.00000 -> 5.0, 4.56666 -> 4.6).
    */
-  const specialties = useMemo(() => {
-    const s = new Set(doctors.map((d) => d.tipe_dokter));
-    return ["Semua Tipe", ...Array.from(s)];
-  }, [doctors]);
+  const formatRating = (value: string | number) => {
+    const num = parseFloat(String(value));
+    if (isNaN(num)) return "0.0";
+    return num.toFixed(1);
+  };
 
   /**
    * columns - Definisi kolom tabel menggunakan Tanstack Table.
-   * Mencakup formatting data, badge status, dan aksi detail.
+   * Disesuaikan dengan field dari response API: nama_dokter, nomor_sip_dokter,
+   * is_aktif, tanggal_expired_praktek, jenis_kelamin, is_suspend, rating_dokter.
    */
   const columns = useMemo<ColumnDef<Dokter>[]>(
     () => [
@@ -94,8 +106,16 @@ const DokterPage: React.FC = () => {
         ),
       },
       {
-        accessorKey: "tipe_dokter",
-        header: "Tipe",
+        accessorKey: "jenis_kelamin",
+        header: "JK",
+        cell: (info) => {
+          const val = info.getValue() as string;
+          return (
+            <span className="text-xs text-text-muted">
+              {val === "L" ? "Laki-laki" : "Perempuan"}
+            </span>
+          );
+        },
       },
       {
         accessorKey: "nomor_sip_dokter",
@@ -131,27 +151,21 @@ const DokterPage: React.FC = () => {
               </span>
             );
           }
-          return (
-            <span className="text-text-muted text-xs">
-              {val}
-            </span>
-          );
+          return <span className="text-text-muted text-xs">{val}</span>;
         },
       },
       {
-        accessorKey: "status_praktek",
+        accessorKey: "is_aktif",
         header: "Status",
         cell: (info) => {
-          const status = info.getValue() as number;
-          return (
-            <span
-              className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                status === 1
-                  ? "bg-green-100 text-green-700"
-                  : "bg-gray-100 text-gray-600"
-              }`}
-            >
-              {status === 1 ? "Aktif" : "Tidak Aktif"}
+          const isAktif = info.getValue() as number;
+          return isAktif === 1 ? (
+            <span className="bg-green-100 text-green-700 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase">
+              Aktif
+            </span>
+          ) : (
+            <span className="bg-gray-100 text-gray-600 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase">
+              Tidak Aktif
             </span>
           );
         },
@@ -175,21 +189,18 @@ const DokterPage: React.FC = () => {
       {
         accessorKey: "rating_dokter",
         header: "Rating",
-        cell: (info) => {
-          const val = parseFloat(info.getValue() as string);
-          return (
-            <div className="flex items-center text-yellow-500 font-bold text-sm">
-              <Star className="w-3 h-3 fill-yellow-500 mr-1" />
-              {val.toFixed(1)}
-            </div>
-          );
-        },
+        cell: (info) => (
+          <div className="flex items-center text-yellow-500 font-bold text-sm">
+            <Star className="w-3 h-3 fill-yellow-500 mr-1" />
+            {formatRating(info.getValue() as string)}
+          </div>
+        ),
       },
       {
         id: "actions",
         header: "Aksi",
         cell: (info) => (
-          <button 
+          <button
             onClick={() => navigate(`/dokter/${info.row.original.id_dokter}`)}
             className="text-primary hover:underline text-xs font-bold flex items-center uppercase tracking-wider"
           >
@@ -213,7 +224,7 @@ const DokterPage: React.FC = () => {
     initialState: {
       pagination: {
         pageIndex: 0,
-        pageSize: 5,
+        pageSize: 20,
       },
     },
   });
@@ -221,14 +232,13 @@ const DokterPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-surface p-6 space-y-6">
       {/* Header Page: Judul dan tombol aksi utama */}
-      <PageHeader 
+      <PageHeader
         icon={<Stethoscope className="w-5 h-5" />}
         title="Manajemen Dokter"
         description="Kelola informasi, status praktek, dan performa dokter."
-
       />
 
-      {/* Filters: Bagian pencarian nama dan dropdown filter spesialisasi */}
+      {/* Filters: Bagian pencarian nama dan dropdown filter status */}
       <div className="bg-surface-muted p-4 rounded-card flex flex-col md:flex-row gap-4 items-center">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
@@ -242,10 +252,10 @@ const DokterPage: React.FC = () => {
         </div>
         <Select
           icon={<Filter className="w-4 h-4" />}
-          value={specialtyFilter}
-          onChange={(e) => setSpecialtyFilter(e.target.value)}
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
         >
-          {specialties.map((s) => (
+          {statusOptions.map((s) => (
             <option key={s} value={s}>
               {s}
             </option>
@@ -254,13 +264,13 @@ const DokterPage: React.FC = () => {
       </div>
 
       {/* Table Area: Render tabel dengan header dan baris data */}
-      <div className="bg-surface-muted rounded-card overflow-hidden">
+      <div className="bg-surface-muted  overflow-hidden">
         <div className="overflow-x-auto min-h-[300px] relative">
           {isLoading && <LoadingState message="Memuat data dokter..." />}
-          
+
           {isError && (
             <div className="absolute inset-0 bg-surface/50 z-10 flex items-center justify-center p-6">
-              <ErrorState 
+              <ErrorState
                 message="Gagal mengambil data dokter. Silakan coba muat ulang halaman ini."
                 onRetry={() => window.location.reload()}
               />
@@ -272,7 +282,7 @@ const DokterPage: React.FC = () => {
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr
                   key={headerGroup.id}
-                  className="bg-surface text-text-muted text-[10px] uppercase tracking-wider"
+                  className="bg-dark-bg text-text-inverse text-[10px] uppercase tracking-wider"
                 >
                   {headerGroup.headers.map((header) => (
                     <th key={header.id} className="px-6 py-4 font-bold">

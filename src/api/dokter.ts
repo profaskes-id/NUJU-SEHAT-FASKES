@@ -6,8 +6,11 @@ import type {
   CreateInviteDokterPayload,
   CreateInviteDokterResponse,
   RequestDokterListResponse,
+  RequestDokterDetailResponse,
   ApproveRejectResponse,
   ReviewDokterResponse,
+  RespondRequestPayload,
+  RespondRequestResponse,
 } from '@/features/dokter/types';
 
 export const getDokterByFaskes = async (id_faskes: string): Promise<DokterResponse> => {
@@ -47,6 +50,13 @@ export const getRequestDokter = async (
   return response.data;
 };
 
+export const getRequestDokterById = async (
+  id: string,
+): Promise<RequestDokterDetailResponse> => {
+  const response = await api.get<RequestDokterDetailResponse>(`/request-dokter/${id}`);
+  return response.data;
+};
+
 export const approveRequestDokter = async (
   id_faskes: string,
   id_request_dokter: string,
@@ -66,6 +76,14 @@ export const rejectRequestDokter = async (
     `/request-dokter/${id_request_dokter}/reject`,
     { id_faskes },
   );
+  return response.data;
+};
+
+export const respondRequestDokter = async (
+  id: string,
+  payload: RespondRequestPayload,
+): Promise<RespondRequestResponse> => {
+  const response = await api.put<RespondRequestResponse>(`/request-dokter/${id}/respond`, payload);
   return response.data;
 };
 

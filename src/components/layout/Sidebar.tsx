@@ -209,7 +209,7 @@ const Sidebar: React.FC = () => {
   const { user, logout } = useAuthStore();
 
   return (
-    <aside className="w-56 h-screen fixed left-0 top-0 bg-sidebar flex flex-col z-50">
+    <aside className="w-56 h-screen fixed left-0 top-0 bg-dark-bg flex flex-col z-50">
       {/* Header */}
       <div className="p-6 flex items-center space-x-3">
         <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" />

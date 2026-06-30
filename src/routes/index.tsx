@@ -9,6 +9,7 @@ const DokterPage = lazy(() => import('@/pages/DokterPage'))
 const DokterDetailPage = lazy(() => import('@/pages/DokterDetailPage'))
 const InviteDokterPage = lazy(() => import('@/pages/InviteDokterPage'))
 const RequestDokterPage = lazy(() => import('@/pages/RequestDokterPage'))
+const RequestDokterDetailPage = lazy(() => import('@/pages/RequestDokterDetailPage'))
 const MarginDiskonPage = lazy(() => import('@/pages/MarginDiskonPage'))
 const WalletPage = lazy(() => import('@/pages/WalletPage'))
 const AjukanWithdrawPage = lazy(() => import('@/pages/AjukanWithdrawPage'))
@@ -55,6 +56,10 @@ export const router = createBrowserRouter([
       {
         path: 'dokter/request',
         element: <RequestDokterPage />,
+      },
+      {
+        path: 'dokter/request/:id',
+        element: <RequestDokterDetailPage />,
       },
       {
         path: 'dokter/:id',

@@ -179,15 +179,16 @@ const DashboardPage: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Chart */}
-        <div className="lg:col-span-2 bg-surface-muted p-6 rounded-card">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-base font-semibold text-text">Grafik Konsultasi (7 Hari Terakhir)</h3>
+        <div className="lg:col-span-2 bg-surface-muted rounded-card overflow-hidden">
+          <div className="px-6 py-4 bg-dark-bg flex justify-between items-center">
+            <h3 className="text-base font-bold text-text-inverse">Grafik Konsultasi (7 Hari Terakhir)</h3>
             <select className="text-xs border-none bg-surface rounded-button px-2 py-1 focus:ring-0">
               <option>Minggu Ini</option>
               <option>Minggu Lalu</option>
             </select>
           </div>
-          <div className="h-[300px] w-full">
+          <div className="p-6">
+            <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e4e4e7" />
@@ -211,12 +212,16 @@ const DashboardPage: React.FC = () => {
                 <Bar dataKey="completed" fill="#ede9fb" radius={[4, 4, 0, 0]} barSize={30} name="Selesai" />
               </BarChart>
             </ResponsiveContainer>
+            </div>
           </div>
         </div>
 
         {/* Top Doctors */}
-        <div className="bg-surface-muted p-6 rounded-card">
-          <h3 className="text-base font-semibold text-text mb-6">Top 3 Dokter Bulan Ini</h3>
+        <div className="bg-surface-muted rounded-card overflow-hidden">
+          <div className="px-6 py-4 bg-dark-bg">
+            <h3 className="text-base font-bold text-text-inverse">Top 3 Dokter Bulan Ini</h3>
+          </div>
+          <div className="p-6">
           <div className="space-y-6">
             {topDoctors.map((doc, index) => (
               <div key={doc.id} className="flex items-center">
@@ -244,24 +249,25 @@ const DashboardPage: React.FC = () => {
             ))}
           </div>
           <button className="w-full mt-8 text-xs font-semibold text-primary hover:underline">Lihat Semua Dokter</button>
+          </div>
         </div>
       </div>
 
       {/* Latest Consultations Table */}
       <div className="bg-surface-muted rounded-card overflow-hidden">
-        <div className="p-6 flex justify-between items-center">
-          <h3 className="text-base font-semibold text-text">Konsultasi Terbaru</h3>
-          <button className="text-xs text-primary font-semibold hover:underline">Lihat Semua</button>
+        <div className="px-6 py-4 bg-dark-bg flex justify-between items-center">
+          <h3 className="text-base font-bold text-text-inverse">Konsultasi Terbaru</h3>
+          <button className="text-xs text-text-inverse/70 font-semibold hover:text-text-inverse transition-colors">Lihat Semua</button>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-surface text-text-muted text-[10px] uppercase tracking-wider">
-                <th className="px-6 py-3 font-semibold">Nama Pasien</th>
-                <th className="px-6 py-3 font-semibold">Dokter</th>
-                <th className="px-6 py-3 font-semibold">Jenis</th>
-                <th className="px-6 py-3 font-semibold">Status</th>
-                <th className="px-6 py-3 font-semibold text-right">Waktu</th>
+              <tr className="bg-dark-bg text-text-inverse text-[10px] uppercase tracking-wider">
+                <th className="px-6 py-3 font-bold">Nama Pasien</th>
+                <th className="px-6 py-3 font-bold">Dokter</th>
+                <th className="px-6 py-3 font-bold">Jenis</th>
+                <th className="px-6 py-3 font-bold">Status</th>
+                <th className="px-6 py-3 font-bold text-right">Waktu</th>
               </tr>
             </thead>
             <tbody>

@@ -1,21 +1,14 @@
 import React, { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
   type ColumnDef,
 } from "@tanstack/react-table";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
-import {
-  Search,
-  ChevronLeft,
-  ChevronRight,
-  Check,
-  X,
-  UserPlus,
-} from "lucide-react";
-import { getRequestDokter, approveRequestDokter, rejectRequestDokter } from "@/api/dokter";
+import { useQuery } from "@tanstack/react-query";
+import { Search, ChevronLeft, ChevronRight, Eye, UserPlus } from "lucide-react";
+import { getRequestDokter } from "@/api/dokter";
 import { useAuthStore } from "@/store/authStore";
 import type { RequestDokter } from "@/features/dokter/types";
 import LoadingState from "@/components/shared/LoadingState";
@@ -29,12 +22,16 @@ const statusBadge: Record<string, { label: string; class: string }> = {
 
 const RequestDokterList: React.FC = () => {
   const { user } = useAuthStore();
-  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const limit = 10;
+  const limit = 20;
 
-  const { data: requestResponse, isLoading, isError } = useQuery({
+  const {
+    data: requestResponse,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["request-dokter", user?.id_faskes, page],
     queryFn: () => getRequestDokter(user?.id_faskes || "", { page, limit }),
     enabled: !!user?.id_faskes,
@@ -42,30 +39,6 @@ const RequestDokterList: React.FC = () => {
 
   const requests = requestResponse?.data.items || [];
   const pagination = requestResponse?.data.pagination;
-
-  const approveMutation = useMutation({
-    mutationFn: (id_request_dokter: string) =>
-      approveRequestDokter(user?.id_faskes || "", id_request_dokter),
-    onSuccess: (data) => {
-      toast.success(data.message || "Request disetujui");
-      queryClient.invalidateQueries({ queryKey: ["request-dokter"] });
-    },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Gagal menyetujui request");
-    },
-  });
-
-  const rejectMutation = useMutation({
-    mutationFn: (id_request_dokter: string) =>
-      rejectRequestDokter(user?.id_faskes || "", id_request_dokter),
-    onSuccess: (data) => {
-      toast.success(data.message || "Request ditolak");
-      queryClient.invalidateQueries({ queryKey: ["request-dokter"] });
-    },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Gagal menolak request");
-    },
-  });
 
   const filteredData = useMemo(() => {
     if (!search) return requests;
@@ -105,9 +78,7 @@ const RequestDokterList: React.FC = () => {
         accessorKey: "nama_faskes",
         header: "Faskes Tujuan",
         cell: (info) => (
-          <span className="text-text text-sm">
-            {info.getValue() as string}
-          </span>
+          <span className="text-text text-sm">{info.getValue() as string}</span>
         ),
       },
       {
@@ -157,32 +128,19 @@ const RequestDokterList: React.FC = () => {
         header: "Aksi",
         cell: (info) => {
           const row = info.row.original;
-          const isPending = row.status.toLowerCase() === "pending";
           return (
-            <div className="flex items-center space-x-2">
-              {isPending ? (
-                <>
-                  <button
-                    onClick={() => approveMutation.mutate(row.id_request_dokter)}
-                    disabled={approveMutation.isPending}
-                    className="p-1.5 rounded-full bg-green-100 text-green-700 hover:bg-green-200 transition-colors disabled:opacity-50"
-                    title="Setujui"
-                  >
-                    <Check className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => rejectMutation.mutate(row.id_request_dokter)}
-                    disabled={rejectMutation.isPending}
-                    className="p-1.5 rounded-full bg-red-100 text-red-700 hover:bg-red-200 transition-colors disabled:opacity-50"
-                    title="Tolak"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </>
-              ) : (
-                <span className="text-xs text-text-muted italic">-</span>
-              )}
-            </div>
+            <button
+              onClick={() =>
+                navigate(
+                  `/dokter/request/${row.id_request_dokter}?id_dokter=${row.id_dokter}`,
+                )
+              }
+              className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-button bg-primary text-text-inverse text-xs font-medium hover:bg-primary-hover transition-colors"
+              title="Lihat detail"
+            >
+              <Eye className="w-3.5 h-3.5" />
+              <span>Detail</span>
+            </button>
           );
         },
       },
@@ -232,7 +190,7 @@ const RequestDokterList: React.FC = () => {
             {table.getHeaderGroups().map((headerGroup) => (
               <tr
                 key={headerGroup.id}
-                className="bg-surface text-text-muted text-[10px] uppercase tracking-wider"
+                className="bg-dark-bg text-text-inverse text-[10px] uppercase tracking-wider"
               >
                 {headerGroup.headers.map((header) => (
                   <th key={header.id} className="px-6 py-4 font-bold">
@@ -250,10 +208,7 @@ const RequestDokterList: React.FC = () => {
           <tbody>
             {table.getRowModel().rows.length > 0 ? (
               table.getRowModel().rows.map((row) => (
-                <tr
-                  key={row.id}
-                  className="hover:bg-surface transition-colors"
-                >
+                <tr key={row.id} className="hover:bg-surface transition-colors">
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}

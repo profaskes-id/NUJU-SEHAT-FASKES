@@ -41,7 +41,7 @@ const ReviewDokterTable: React.FC<ReviewDokterTableProps> = ({ idDokter }) => {
         {!isLoading && !isError && (
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-surface text-text-muted text-[10px] uppercase tracking-wider">
+              <tr className="bg-dark-bg text-text-inverse text-[10px] uppercase tracking-wider">
                 <th className="px-6 py-4 font-bold">Pasien</th>
                 <th className="px-6 py-4 font-bold">Rating</th>
                 <th className="px-6 py-4 font-bold">Ulasan</th>

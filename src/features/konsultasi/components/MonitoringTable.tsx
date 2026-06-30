@@ -249,7 +249,7 @@ const MonitoringTable: React.FC = () => {
             {table.getHeaderGroups().map((headerGroup) => (
               <tr
                 key={headerGroup.id}
-                className="bg-surface text-text-muted text-[10px] uppercase tracking-wider"
+                className="bg-dark-bg text-text-inverse text-[10px] uppercase tracking-wider"
               >
                 {headerGroup.headers.map((header) => (
                   <th key={header.id} className="px-6 py-4 font-bold">

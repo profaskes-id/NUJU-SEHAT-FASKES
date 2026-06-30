@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Stethoscope,
   ShieldAlert,
   Star,
   Calendar,
@@ -13,6 +12,8 @@ import {
   Briefcase,
   MapPin,
   Clock,
+  Microscope,
+  Fingerprint,
 } from "lucide-react";
 import type { DokterDetail } from "../types";
 
@@ -20,282 +21,238 @@ interface DokterDetailCardProps {
   dokter: DokterDetail;
 }
 
-/**
- * Komponen reusable untuk menampilkan item detail dengan label dan value.
- */
-const DetailItem: React.FC<{
+const InfoRow: React.FC<{
   icon: React.ReactNode;
   label: string;
   value: string | React.ReactNode;
 }> = ({ icon, label, value }) => (
-  <div className="flex items-start space-x-3 p-3 bg-surface rounded-card border border-surface-border">
-    <div className="bg-dark-bg text-white rounded-full p-2 inline-flex items-center justify-center shrink-0">
-      {icon}
-    </div>
-    <div className="flex-1 min-w-0">
-      <p className="text-[10px] text-text-muted uppercase font-bold tracking-wider">
+  <div className="flex items-center py-3 px-4 odd:bg-white even:bg-surface-muted dark:odd:bg-dark-card dark:even:bg-dark-surface rounded-lg">
+    <div className="flex items-center w-1/2 sm:w-2/5">
+      <span className="text-text-muted shrink-0 mr-3">{icon}</span>
+      <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">
         {label}
-      </p>
-      <div className="text-sm font-semibold text-text mt-0.5 break-words">
-        {value || "-"}
-      </div>
+      </span>
+    </div>
+    <div className="w-1/2 sm:w-3/5 text-sm font-medium text-text">
+      {value || "-"}
     </div>
   </div>
 );
 
-/**
- * DokterDetailCard - Menampilkan profil lengkap dokter dengan data terbaru dari API.
- *
- * @param dokter - Data objek dokter detail
- */
+const SubHeader: React.FC<{ icon: React.ReactNode; title: string }> = ({
+  icon,
+  title,
+}) => (
+  <div className="flex items-center space-x-2.5 mb-3">
+    <span className="text-dark-bg dark:text-dark-text">{icon}</span>
+    <h4 className="text-sm font-bold text-dark-bg dark:text-dark-text uppercase tracking-wider">
+      {title}
+    </h4>
+  </div>
+);
+
 const DokterDetailCard: React.FC<DokterDetailCardProps> = ({ dokter }) => {
-  // alert(JSON.stringify(dokter, null, 2));
-
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      {/* Kolom Kiri: Profile Summary (4 cols) */}
-      <div className="lg:col-span-4 space-y-6">
-        <div className="bg-surface-muted dark:bg-dark-card rounded-card p-6 flex flex-col items-center text-center">
-          <div className="w-32 h-32 rounded-full bg-primary-light flex items-center justify-center mb-4 overflow-hidden border-4 border-surface shadow-sm">
-            <User className="w-16 h-16 text-primary" />
-          </div>
-          <h2 className="text-xl font-bold text-text leading-tight">
-            {dokter.nama_dokter}
-          </h2>
-          <p className="text-primary font-medium text-sm mt-1">
-            {dokter.tipe_dokter || "Dokter Umum"}
-          </p>
-
-          <div className="mt-4 flex items-center justify-center space-x-2">
-            <span
-              className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase ${
-                dokter.status_praktek === 1
-                  ? "bg-green-100 text-green-700"
-                  : "bg-gray-100 text-gray-600"
-              }`}
-            >
-              {dokter.status_praktek === 1 ? "Aktif" : "Tidak Aktif"}
-            </span>
-            {dokter.is_suspend === 1 && (
-              <span className="bg-red-100 text-red-700 rounded-full px-3 py-1 text-[10px] font-bold uppercase flex items-center">
-                <ShieldAlert className="w-3 h-3 mr-1" /> Suspend
-              </span>
-            )}
-          </div>
-
-          <div className="mt-6 w-full pt-6 border-t border-surface-border flex justify-around">
-            {/* <div className="text-center">
-              <p className="text-[10px] text-text-muted uppercase font-bold">
-                Rating
+    <div className="space-y-5 max-w-5xl mx-auto">
+      <div className="bg-dark-bg rounded-xl overflow-hidden">
+        <div className="px-5 py-5">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+            <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+              <User className="w-8 h-8 text-text-inverse" />
+            </div>
+            <div className="flex-1 text-center sm:text-left min-w-0">
+              <h2 className="text-xl font-bold text-text-inverse truncate">
+                {dokter.nama_dokter}
+              </h2>
+              <p className="text-sm text-text-inverse/70">
+                {dokter.tipe_dokter === "spesialis"
+                  ? `Spesialis ${dokter.spesialis_dokter || ""}`
+                  : dokter.tipe_dokter || "Dokter Umum"}
               </p>
-              <div className="flex items-center text-yellow-500 font-bold mt-1">
-                <Star className="w-3 h-3 fill-yellow-500 mr-1" />
-                {dokter.rating_dokter || "0.0"}
-              </div> 
-            </div> */}
-            <div className="text-center">
-              <p className="text-[10px] text-text-muted uppercase font-bold">
-                Pengalaman
-              </p>
-              <div className="flex items-center text-text font-bold mt-1">
-                <Briefcase className="w-3 h-3 mr-1 text-text-muted" />
-                {dokter.tahun_pengalaman || 0} Thn
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 mt-2">
+                <span className="rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase bg-blue-100 text-blue-700">
+                  {dokter.jenis_kelamin === "L" ? "Laki-laki" : "Perempuan"}
+                </span>
+                {dokter.is_suspend === 1 && (
+                  <span className="rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase bg-red-100 text-red-700 flex items-center">
+                    <ShieldAlert className="w-3 h-3 mr-0.5" /> Suspend
+                  </span>
+                )}
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Kontak Quick Info */}
-        <div className="bg-surface-muted dark:bg-dark-card rounded-card p-6 space-y-4">
-          <h3 className="text-sm font-bold text-text flex items-center">
-            <Phone className="w-4 h-4 mr-2 text-primary" /> Informasi Kontak
-          </h3>
-          <div className="space-y-3">
-            <div className="flex items-center space-x-3 group">
-              <div className="p-2 bg-surface rounded-full border border-surface-border group-hover:border-primary transition-colors">
-                <Mail className="w-4 h-4 text-text-muted group-hover:text-primary" />
+            <div className="flex items-center gap-4 shrink-0 sm:pl-4 sm:border-l border-white/10">
+              <div className="text-center">
+                <p className="text-[10px] text-text-inverse/60 uppercase font-bold">
+                  Rating
+                </p>
+                <div className="flex items-center text-yellow-400 font-bold mt-0.5">
+                  <Star className="w-3.5 h-3.5 fill-yellow-400 mr-0.5" />
+                  {dokter.rating_dokter || "0.0"}
+                </div>
               </div>
-              <div className="overflow-hidden">
-                <p className="text-[10px] text-text-muted uppercase font-bold">
-                  Email
+              <div className="text-center">
+                <p className="text-[10px] text-text-inverse/60 uppercase font-bold">
+                  Pengalaman
                 </p>
-                <p className="text-xs font-medium text-text truncate">
-                  {dokter.email_dokter}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-3 group">
-              <div className="p-2 bg-surface rounded-full border border-surface-border group-hover:border-primary transition-colors">
-                <Phone className="w-4 h-4 text-text-muted group-hover:text-primary" />
-              </div>
-              <div>
-                <p className="text-[10px] text-text-muted uppercase font-bold">
-                  WhatsApp
-                </p>
-                <p className="text-xs font-medium text-text">
-                  {dokter.nomor_hp_dokter}
-                </p>
+                <div className="flex items-center text-text-inverse font-bold mt-0.5">
+                  <Briefcase className="w-3.5 h-3.5 mr-0.5 text-text-inverse/60" />
+                  {dokter.tahun_pengalaman || 0} Thn
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Kolom Kanan: Detail Information (8 cols) */}
-      <div className="lg:col-span-8 space-y-6">
-        {/* Data Personal & Profesional */}
-        <div className="bg-surface-muted dark:bg-dark-card rounded-card p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-base font-semibold text-text flex items-center">
-              <User className="w-5 h-5 mr-2 text-primary" /> Data Pribadi &
-              Profesional
-            </h3>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <DetailItem
-              icon={<CreditCard className="w-4 h-4" />}
-              label="Nomor NIK"
-              value={dokter.nomor_nik}
-            />
-            <DetailItem
+      <div className="bg-surface-muted dark:bg-dark-card rounded-xl border border-surface-border/40 overflow-hidden">
+        <div className="divide-y divide-surface-border/30">
+          {/* Data Pribadi & Profesional */}
+          <div className="px-5 py-4">
+            <SubHeader
               icon={<User className="w-4 h-4" />}
-              label="Jenis Kelamin"
-              value={dokter.jenis_kelamin === "L" ? "Laki-laki" : "Perempuan"}
+              title="Data Pribadi & Profesional"
             />
-            <DetailItem
-              icon={<Calendar className="w-4 h-4" />}
-              label="Tanggal Lahir"
-              value={dokter.tanggal_lahir}
-            />
-            <DetailItem
-              icon={<GraduationCap className="w-4 h-4" />}
-              label="Lulusan"
-              value={dokter.lulusan}
-            />
-            <DetailItem
-              icon={<FileText className="w-4 h-4" />}
-              label="Nomor SIP"
-              value={
-                <code className="bg-surface px-2 py-0.5 rounded border border-surface-border">
-                  {dokter.nomor_sip_dokter || "-"}
-                </code>
-              }
-            />
-            <DetailItem
-              icon={<Clock className="w-4 h-4" />}
-              label="Expired SIP"
-              value={dokter.tanggal_expired_praktek || "-"}
-            />
-          </div>
-        </div>
-
-        {/* Data Alamat */}
-        <div className="bg-surface-muted dark:bg-dark-card rounded-card p-6">
-          <h3 className="text-base font-semibold text-text flex items-center mb-6">
-            <MapPin className="w-5 h-5 mr-2 text-primary" /> Informasi Alamat
-          </h3>
-
-          <div className="space-y-6">
-            {/* Domisili */}
-            <div>
-              <p className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3 flex items-center">
-                <span className="w-2 h-2 bg-primary rounded-full mr-2"></span>{" "}
-                Alamat Domisili
-              </p>
-              <div className="bg-surface p-4 rounded-card border border-surface-border">
-                <p className="text-sm font-medium text-text mb-2">
-                  {dokter.alamat_domisili}
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3 pt-3 border-t border-surface-border">
-                  <div>
-                    <p className="text-[10px] text-text-muted uppercase font-bold">
-                      Provinsi
-                    </p>
-                    <p className="text-xs font-semibold text-text">
-                      {dokter.provinsi_domisili_nama}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-text-muted uppercase font-bold">
-                      Kabupaten/Kota
-                    </p>
-                    <p className="text-xs font-semibold text-text">
-                      {dokter.kab_kota_domisili_nama}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-text-muted uppercase font-bold">
-                      Kecamatan
-                    </p>
-                    <p className="text-xs font-semibold text-text">
-                      {dokter.kecamatan_domisili_nama}
-                    </p>
-                  </div>
-                </div>
-              </div>
+            <div className="rounded-lg overflow-hidden border border-surface-border/30 divide-y divide-surface-border/30">
+              <InfoRow
+                icon={<CreditCard className="w-4 h-4" />}
+                label="NIK"
+                value={dokter.nomor_nik}
+              />
+              <InfoRow
+                icon={<Calendar className="w-4 h-4" />}
+                label="Tanggal Lahir"
+                value={dokter.tanggal_lahir}
+              />
+              <InfoRow
+                icon={<GraduationCap className="w-4 h-4" />}
+                label="Lulusan"
+                value={dokter.lulusan}
+              />
+              <InfoRow
+                icon={<Microscope className="w-4 h-4" />}
+                label="Spesialisasi"
+                value={dokter.spesialis_dokter || "-"}
+              />
+              <InfoRow
+                icon={<Fingerprint className="w-4 h-4" />}
+                label="STR"
+                value={dokter.str_dokter || "-"}
+              />
             </div>
+          </div>
 
-            {/* Identitas (hanya tampil jika berbeda) */}
-            {dokter.is_identitas_domisili_same === 0 ? (
-              <div>
-                <p className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3 flex items-center">
-                  <span className="w-2 h-2 bg-text-muted rounded-full mr-2"></span>{" "}
-                  Alamat Identitas (KTP)
-                </p>
-                <div className="bg-surface p-4 rounded-card border border-surface-border">
-                  <p className="text-sm font-medium text-text mb-2">
-                    {dokter.alamat_identitas}
-                  </p>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3 pt-3 border-t border-surface-border">
-                    <div>
-                      <p className="text-[10px] text-text-muted uppercase font-bold">
-                        Provinsi
-                      </p>
-                      <p className="text-xs font-semibold text-text">
-                        {dokter.provinsi_identitas_nama}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-[10px] text-text-muted uppercase font-bold">
-                        Kabupaten/Kota
-                      </p>
-                      <p className="text-xs font-semibold text-text">
-                        {dokter.kab_kota_identitas_nama}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-[10px] text-text-muted uppercase font-bold">
-                        Kecamatan
-                      </p>
-                      <p className="text-xs font-semibold text-text">
-                        {dokter.kecamatan_identitas_nama}
-                      </p>
-                    </div>
+          {/* Kontak */}
+          <div className="px-5 py-4">
+            <SubHeader icon={<Phone className="w-4 h-4" />} title="Kontak" />
+            <div className="rounded-lg overflow-hidden border border-surface-border/30 divide-y divide-surface-border/30">
+              <InfoRow
+                icon={<Mail className="w-4 h-4" />}
+                label="Email"
+                value={dokter.email_dokter}
+              />
+              <InfoRow
+                icon={<Phone className="w-4 h-4" />}
+                label="Nomor HP"
+                value={dokter.nomor_hp_dokter}
+              />
+            </div>
+          </div>
+
+          {/* Alamat */}
+          <div className="px-5 py-4">
+            <SubHeader icon={<MapPin className="w-4 h-4" />} title="Alamat" />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div className="rounded-lg overflow-hidden border border-surface-border/30 divide-y divide-surface-border/30">
+                <div className="px-4 py-2.5 bg-white dark:bg-dark-card text-xs font-bold text-text-muted uppercase tracking-wider">
+                  Domisili
+                </div>
+                <InfoRow
+                  icon={<MapPin className="w-4 h-4" />}
+                  label="Alamat"
+                  value={dokter.alamat_domisili}
+                />
+                <InfoRow
+                  icon={<MapPin className="w-4 h-4" />}
+                  label="Provinsi"
+                  value={dokter.provinsi_domisili_nama}
+                />
+                <InfoRow
+                  icon={<MapPin className="w-4 h-4" />}
+                  label="Kab/Kota"
+                  value={dokter.kab_kota_domisili_nama}
+                />
+                <InfoRow
+                  icon={<MapPin className="w-4 h-4" />}
+                  label="Kecamatan"
+                  value={dokter.kecamatan_domisili_nama}
+                />
+                <InfoRow
+                  icon={<MapPin className="w-4 h-4" />}
+                  label="Desa"
+                  value={dokter.desa_domisili_nama}
+                />
+              </div>
+
+              {dokter.is_identitas_domisili_same === 1 ? (
+                <div className="flex items-start p-5 bg-dark-bg/5 dark:bg-dark-surface rounded-lg border border-dark-bg/10">
+                  <ShieldAlert className="w-5 h-5 text-dark-bg dark:text-dark-text shrink-0 mt-0.5 mr-3" />
+                  <div>
+                    <p className="text-sm font-bold text-dark-bg dark:text-dark-text">
+                      Alamat Identitas Sama
+                    </p>
+                    <p className="text-xs text-dark-bg/60 dark:text-dark-text/60 mt-0.5">
+                      Alamat KTP identik dengan alamat domisili.
+                    </p>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <div className="bg-primary-light/30 border border-primary/20 rounded-card p-3 flex items-center">
-                <ShieldAlert className="w-4 h-4 text-primary mr-2" />
-                <p className="text-xs font-medium text-primary">
-                  Alamat Identitas sama dengan Alamat Domisili
-                </p>
-              </div>
+              ) : (
+                <div className="rounded-lg overflow-hidden border border-surface-border/30 divide-y divide-surface-border/30">
+                  <div className="px-4 py-2.5 bg-white dark:bg-dark-card text-xs font-bold text-text-muted uppercase tracking-wider">
+                    Identitas (KTP)
+                  </div>
+                  <InfoRow
+                    icon={<MapPin className="w-4 h-4" />}
+                    label="Alamat"
+                    value={dokter.alamat_identitas}
+                  />
+                  <InfoRow
+                    icon={<MapPin className="w-4 h-4" />}
+                    label="Provinsi"
+                    value={dokter.provinsi_identitas_nama}
+                  />
+                  <InfoRow
+                    icon={<MapPin className="w-4 h-4" />}
+                    label="Kab/Kota"
+                    value={dokter.kab_kota_identitas_nama}
+                  />
+                  <InfoRow
+                    icon={<MapPin className="w-4 h-4" />}
+                    label="Kecamatan"
+                    value={dokter.kecamatan_identitas_nama}
+                  />
+                  <InfoRow
+                    icon={<MapPin className="w-4 h-4" />}
+                    label="Desa"
+                    value={dokter.desa_identitas_nama}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Metadata */}
+          <div className="flex flex-wrap items-center justify-between gap-2 px-5 py-3">
+            <span className="text-[10px] text-text-muted flex items-center">
+              <Clock className="w-3 h-3 mr-1" /> Terdaftar:{" "}
+              {dokter.created_at || "-"}
+            </span>
+            {dokter.updated_at && (
+              <span className="text-[10px] text-text-muted flex items-center">
+                <Clock className="w-3 h-3 mr-1" /> Diperbarui:{" "}
+                {dokter.updated_at}
+              </span>
             )}
           </div>
-        </div>
-
-        {/* Metadata */}
-        <div className="flex items-center justify-between px-2">
-          <p className="text-[10px] text-text-muted">
-            Terdaftar pada: {dokter.created_at}
-          </p>
-          {dokter.updated_at && (
-            <p className="text-[10px] text-text-muted">
-              Pembaruan terakhir: {dokter.updated_at}
-            </p>
-          )}
         </div>
       </div>
     </div>

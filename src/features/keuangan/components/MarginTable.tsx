@@ -23,7 +23,11 @@ const MarginTable: React.FC<MarginTableProps> = ({ data, onEdit }) => {
       {
         accessorKey: "nama_jenis_konsultasi",
         header: "Jenis Konsultasi",
-        cell: (info) => <span className="font-semibold text-text">{info.getValue() as string}</span>,
+        cell: (info) => (
+          <span className="font-semibold text-text">
+            {info.getValue() as string}
+          </span>
+        ),
       },
       {
         accessorKey: "nominal",
@@ -48,7 +52,7 @@ const MarginTable: React.FC<MarginTableProps> = ({ data, onEdit }) => {
         ),
       },
     ],
-    [onEdit]
+    [onEdit],
   );
 
   const table = useReactTable({
@@ -58,14 +62,20 @@ const MarginTable: React.FC<MarginTableProps> = ({ data, onEdit }) => {
   });
 
   return (
-    <div className="bg-surface rounded-card overflow-hidden border border-surface-border">
+    <div className="bg-surface  overflow-hidden border border-surface-border">
       <table className="w-full text-left border-collapse">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id} className="bg-surface-muted text-text-muted text-[10px] uppercase tracking-wider">
+            <tr
+              key={headerGroup.id}
+              className="bg-dark-bg text-text-inverse text-[10px] uppercase tracking-wider"
+            >
               {headerGroup.headers.map((header) => (
                 <th key={header.id} className="px-6 py-4 font-bold">
-                  {flexRender(header.column.columnDef.header, header.getContext())}
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext(),
+                  )}
                 </th>
               ))}
             </tr>
@@ -73,9 +83,15 @@ const MarginTable: React.FC<MarginTableProps> = ({ data, onEdit }) => {
         </thead>
         <tbody>
           {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="hover:bg-surface-muted transition-colors">
+            <tr
+              key={row.id}
+              className="hover:bg-surface-muted transition-colors"
+            >
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="px-6 py-4 border-b border-surface-border last:border-0 text-sm">
+                <td
+                  key={cell.id}
+                  className="px-6 py-4 border-b border-surface-border last:border-0 text-sm"
+                >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}

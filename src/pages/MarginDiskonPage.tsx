@@ -87,66 +87,66 @@ const MarginDiskonPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-surface p-6 space-y-6">
+    <div className="min-h-screen bg-surface p-6 space-y-5">
       <PageHeader 
         icon={<BadgePercent className="w-5 h-5" />}
         title="Margin & Diskon"
         description="Kelola keuntungan faskes dan program promo aktif."
       />
 
-      {/* Tab Navigation */}
-      <div className="flex space-x-6 border-b border-surface-border">
-        <button
-          onClick={() => setActiveTab("margin")}
-          className={`pb-4 text-sm font-medium transition-all ${
-            activeTab === "margin" 
-              ? "border-b-2 border-primary text-primary" 
-              : "text-text-muted hover:text-text"
-          }`}
-        >
-          Margin Keuntungan
-        </button>
-        <button
-          onClick={() => setActiveTab("diskon")}
-          className={`pb-4 text-sm font-medium transition-all ${
-            activeTab === "diskon" 
-              ? "border-b-2 border-primary text-primary" 
-              : "text-text-muted hover:text-text"
-          }`}
-        >
-          Program Diskon
-        </button>
-      </div>
+      <div className="bg-surface-muted dark:bg-dark-card rounded-xl border border-surface-border/40 overflow-hidden">
+        <div className="flex border-b border-surface-border/40">
+          <button
+            onClick={() => setActiveTab("margin")}
+            className={`flex-1 py-3 text-sm font-bold text-center transition-all ${
+              activeTab === "margin" 
+                ? "bg-white dark:bg-dark-surface text-dark-bg dark:text-dark-text border-b-2 border-dark-bg dark:border-dark-text" 
+                : "text-text-muted hover:text-text"
+            }`}
+          >
+            Margin Keuntungan
+          </button>
+          <button
+            onClick={() => setActiveTab("diskon")}
+            className={`flex-1 py-3 text-sm font-bold text-center transition-all ${
+              activeTab === "diskon" 
+                ? "bg-white dark:bg-dark-surface text-dark-bg dark:text-dark-text border-b-2 border-dark-bg dark:border-dark-text" 
+                : "text-text-muted hover:text-text"
+            }`}
+          >
+            Program Diskon
+          </button>
+        </div>
 
-      {/* Tab Content */}
-      <div className="relative min-h-[400px]">
-        {activeTab === "margin" && (
-          <>
-            {isLoadingMargin && <LoadingState message="Memuat data margin..." />}
-            {isErrorMargin && <ErrorState message="Gagal mengambil data margin faskes." onRetry={() => refetchMargin()} />}
-            {!isLoadingMargin && !isErrorMargin && marginResponse && (
-              <div className="space-y-4">
-                <div className="bg-primary-light/30 p-4 rounded-card border border-primary/20 flex items-center">
-                  <Wallet className="w-5 h-5 text-primary mr-3" />
-                  <p className="text-xs font-medium text-primary">
-                    Margin ini akan ditambahkan ke harga dasar konsultasi dari setiap dokter.
-                  </p>
+        <div className="p-5">
+          {activeTab === "margin" && (
+            <>
+              {isLoadingMargin && <LoadingState message="Memuat data margin..." />}
+              {isErrorMargin && <ErrorState message="Gagal mengambil data margin faskes." onRetry={() => refetchMargin()} />}
+              {!isLoadingMargin && !isErrorMargin && marginResponse && (
+                <div className="space-y-4">
+                  <div className="bg-dark-bg/5 dark:bg-dark-surface rounded-lg px-4 py-3 flex items-center">
+                    <Wallet className="w-4 h-5 text-dark-bg dark:text-dark-text mr-3 shrink-0" />
+                    <p className="text-xs font-medium text-dark-bg/70 dark:text-dark-text/70">
+                      Margin ini akan ditambahkan ke harga dasar konsultasi dari setiap dokter.
+                    </p>
+                  </div>
+                  <MarginTable data={marginResponse.data} onEdit={handleEditMargin} />
                 </div>
-                <MarginTable data={marginResponse.data} onEdit={handleEditMargin} />
-              </div>
-            )}
-          </>
-        )}
+              )}
+            </>
+          )}
 
-        {activeTab === "diskon" && (
-          <>
-            {isLoadingDiskon && <LoadingState message="Memuat data diskon..." />}
-            {isErrorDiskon && <ErrorState message="Gagal mengambil data diskon faskes." onRetry={() => refetchDiskon()} />}
-            {!isLoadingDiskon && !isErrorDiskon && diskonResponse && (
-              <DiskonTable data={diskonResponse.data} onEdit={handleEditDiskon} />
-            )}
-          </>
-        )}
+          {activeTab === "diskon" && (
+            <>
+              {isLoadingDiskon && <LoadingState message="Memuat data diskon..." />}
+              {isErrorDiskon && <ErrorState message="Gagal mengambil data diskon faskes." onRetry={() => refetchDiskon()} />}
+              {!isLoadingDiskon && !isErrorDiskon && diskonResponse && (
+                <DiskonTable data={diskonResponse.data} onEdit={handleEditDiskon} />
+              )}
+            </>
+          )}
+        </div>
       </div>
 
       {/* Modals */}
