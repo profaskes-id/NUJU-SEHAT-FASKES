@@ -16,6 +16,7 @@ import {
   Fingerprint,
 } from "lucide-react";
 import type { DokterDetail } from "../types";
+import { formatDate } from "@/utils/format";
 
 interface DokterDetailCardProps {
   dokter: DokterDetail;
@@ -137,6 +138,16 @@ const DokterDetailCard: React.FC<DokterDetailCardProps> = ({ dokter }) => {
                 icon={<Fingerprint className="w-4 h-4" />}
                 label="STR"
                 value={dokter.str_dokter || "-"}
+              />
+              <InfoRow
+                icon={<Calendar className="w-4 h-4" />}
+                label="Tgl. Berlaku STR"
+                value={formatDate(dokter.tgl_berlaku_str ?? "")}
+              />
+              <InfoRow
+                icon={<Calendar className="w-4 h-4" />}
+                label="Tgl. Berakhir STR"
+                value={formatDate(dokter.tgl_berakhir_str ?? "")}
               />
             </div>
           </div>

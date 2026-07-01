@@ -18,8 +18,8 @@ import {
   AlertTriangle,
   Microscope,
 } from "lucide-react";
-import type { RequestDokter } from "@/features/dokter/types";
-import type { DokterDetail } from "@/features/dokter/types";
+import type { RequestDokter, DokterDetail } from "@/features/dokter/types";
+import { formatDate } from "@/utils/format";
 
 interface RequestDokterDetailCardProps {
   request: RequestDokter;
@@ -108,6 +108,16 @@ const RequestDokterDetailCard: React.FC<RequestDokterDetailCardProps> = ({
             }
           />
           <InfoRow
+            icon={<Calendar className="w-4 h-4" />}
+            label="Tgl. Berlaku SIP"
+            value={formatDate(request.tgl_berlaku_sip ?? "")}
+          />
+          <InfoRow
+            icon={<Calendar className="w-4 h-4" />}
+            label="Tgl. Berakhir SIP"
+            value={formatDate(request.tgl_berakhir_sip ?? "")}
+          />
+          <InfoRow
             icon={<Building2 className="w-4 h-4" />}
             label="Faskes Tujuan"
             value={request.nama_faskes}
@@ -119,11 +129,11 @@ const RequestDokterDetailCard: React.FC<RequestDokterDetailCardProps> = ({
           />
           <InfoRow
             icon={<Calendar className="w-4 h-4" />}
-            label="Diterima Pada"
+            label="Ditanggapi Pada"
             value={
               request.accepted_at || (
                 <span className="text-text-muted/50 italic text-xs">
-                  Belum diterima
+                  Belum ditanggapi
                 </span>
               )
             }
@@ -237,6 +247,16 @@ const RequestDokterDetailCard: React.FC<RequestDokterDetailCardProps> = ({
                   icon={<Fingerprint className="w-4 h-4" />}
                   label="STR"
                   value={dokter.str_dokter || "-"}
+                />
+                <InfoRow
+                  icon={<Calendar className="w-4 h-4" />}
+                  label="Tgl. Berlaku STR"
+                  value={formatDate(dokter.tgl_berlaku_str ?? "")}
+                />
+                <InfoRow
+                  icon={<Calendar className="w-4 h-4" />}
+                  label="Tgl. Berakhir STR"
+                  value={formatDate(dokter.tgl_berakhir_str ?? "")}
                 />
               </div>
             </div>

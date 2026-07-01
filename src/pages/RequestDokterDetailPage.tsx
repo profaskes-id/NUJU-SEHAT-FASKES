@@ -7,7 +7,6 @@ import { useRequestDokterDetail } from "@/features/dokter/hooks/useRequestDokter
 import { useDokterDetail } from "@/features/dokter/hooks/useDokterDetail";
 import { respondRequestDokter } from "@/api/dokter";
 import RequestDokterDetailCard from "@/features/dokter/components/RequestDokterDetailCard";
-import RespondRequestModal from "@/features/dokter/components/RespondRequestModal";
 import LoadingState from "@/components/shared/LoadingState";
 import ErrorState from "@/components/shared/ErrorState";
 import PageHeader from "@/components/shared/PageHeader";
@@ -19,7 +18,7 @@ const RequestDokterDetailPage: React.FC = () => {
   const idDokter = searchParams.get("id_dokter") || "";
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [showAcceptModal, setShowAcceptModal] = useState(false);
+  const [showAcceptConfirm, setShowAcceptConfirm] = useState(false);
   const [showRejectConfirm, setShowRejectConfirm] = useState(false);
 
   const {
@@ -47,9 +46,27 @@ const RequestDokterDetailPage: React.FC = () => {
     },
   });
 
-  const handleAcceptSuccess = () => {
-    refetchRequest();
-  };
+  const acceptMutation = useMutation({
+    mutationFn: () => {
+      const payload = {
+        status: "accepted" as const,
+        is_aktif: 1,
+        tanggal_mulai_praktek: requestResponse?.data?.tgl_berlaku_sip ?? "",
+        tanggal_expired_praktek: requestResponse?.data?.tgl_berakhir_sip ?? "",
+        tipe_dokter: dokterResponse?.data?.tipe_dokter ?? "umum",
+      };
+      console.log("Payload accept:", payload);
+      return respondRequestDokter(id || "", payload);
+    },
+    onSuccess: (data) => {
+      toast.success(data.message || "Request berhasil diterima");
+      queryClient.invalidateQueries({ queryKey: ["request-dokter"] });
+      refetchRequest();
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || "Gagal menerima request");
+    },
+  });
 
   const handleBack = () => navigate("/dokter/request");
 
@@ -77,7 +94,7 @@ const RequestDokterDetailPage: React.FC = () => {
           {isPending && (
             <div className="flex items-center space-x-3 mb-5 px-0">
               <button
-                onClick={() => setShowAcceptModal(true)}
+                onClick={() => setShowAcceptConfirm(true)}
                 className="inline-flex items-center space-x-2 px-4 py-2 rounded-button bg-green-600 hover:bg-green-700 text-white text-sm font-medium transition-colors"
               >
                 <Check className="w-4 h-4" />
@@ -116,12 +133,46 @@ const RequestDokterDetailPage: React.FC = () => {
         )}
       </div>
 
-      <RespondRequestModal
-        isOpen={showAcceptModal}
-        onClose={() => setShowAcceptModal(false)}
-        idRequestDokter={id || ""}
-        onSuccess={handleAcceptSuccess}
-      />
+      <Modal
+        isOpen={showAcceptConfirm}
+        onClose={() => setShowAcceptConfirm(false)}
+        title="Konfirmasi Terima"
+      >
+        <div className="text-center">
+          <span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-green-100 text-green-600 mb-4">
+            <Check className="w-7 h-7" />
+          </span>
+          <p className="text-sm text-text-muted mb-2">
+            Apakah Anda yakin ingin menerima pengajuan dokter{" "}
+            <span className="font-semibold text-text">{requestResponse?.data?.nama_dokter}</span>?
+          </p>
+          <p className="text-xs text-text-muted/70 mb-6">
+            Tanggal praktek akan otomatis mengikuti data SIP yang diajukan.
+          </p>
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={() => setShowAcceptConfirm(false)}
+              className="flex-1 px-4 py-2 rounded-button bg-surface-muted hover:bg-surface-border text-text text-sm font-medium transition-colors"
+            >
+              Batal
+            </button>
+            <button
+              onClick={() => {
+                acceptMutation.mutate();
+                setShowAcceptConfirm(false);
+              }}
+              disabled={acceptMutation.isPending}
+              className="flex-1 px-4 py-2 rounded-button bg-green-600 hover:bg-green-700 text-white text-sm font-medium transition-colors disabled:opacity-50 flex items-center justify-center"
+            >
+              {acceptMutation.isPending ? (
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                "Ya, Terima"
+              )}
+            </button>
+          </div>
+        </div>
+      </Modal>
 
       <Modal
         isOpen={showRejectConfirm}

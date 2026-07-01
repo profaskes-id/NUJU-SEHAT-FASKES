@@ -35,6 +35,8 @@ export interface DokterDetail extends Dokter {
   suspend_by: string | null;
   created_at: string;
   updated_at: string | null;
+  tgl_berlaku_str: string | null;
+  tgl_berakhir_str: string | null;
 }
 
 export interface Pagination {
@@ -109,6 +111,8 @@ export interface RequestDokter {
   accepted_at: string | null;
   nama_dokter: string;
   nama_faskes: string;
+  tgl_berlaku_sip: string | null;
+  tgl_berakhir_sip: string | null;
 }
 
 export interface RequestDokterListResponse {
