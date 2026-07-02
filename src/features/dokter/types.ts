@@ -8,7 +8,7 @@ export interface Dokter {
   spesialis_dokter: string | null;
   jenis_kelamin: string;
   is_suspend: number;
-  rating_dokter: string;
+  rating: string;
 }
 
 export interface DokterDetail extends Dokter {
@@ -37,6 +37,8 @@ export interface DokterDetail extends Dokter {
   updated_at: string | null;
   tgl_berlaku_str: string | null;
   tgl_berakhir_str: string | null;
+  foto: string | null;
+  ktp: string | null;
 }
 
 export interface Pagination {

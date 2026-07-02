@@ -25,7 +25,7 @@ import { formatDate } from "@/utils/format";
 const statusOptions = [
   { value: "", label: "Semua Status" },
   { value: "pending", label: "Pending" },
-  { value: "confirmed", label: "Confirmed" },
+  // { value: "confirmed", label: "Confirmed" },
   { value: "ongoing", label: "Ongoing" },
   { value: "completed", label: "Completed" },
   { value: "cancelled", label: "Cancelled" },
@@ -33,7 +33,7 @@ const statusOptions = [
 
 const statusBadge: Record<string, { label: string; class: string }> = {
   pending: { label: "Pending", class: "bg-yellow-100 text-yellow-700" },
-  confirmed: { label: "Confirmed", class: "bg-blue-100 text-blue-700" },
+  // confirmed: { label: "Confirmed", class: "bg-blue-100 text-blue-700" },
   ongoing: { label: "Ongoing", class: "bg-purple-100 text-purple-700" },
   completed: { label: "Completed", class: "bg-green-100 text-green-700" },
   cancelled: { label: "Cancelled", class: "bg-red-100 text-red-700" },
@@ -48,20 +48,33 @@ const MonitoringTable: React.FC = () => {
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  const [dokterFilter, setDokterFilter] = useState("");
+  const [namaDokterFilter, setNamaDokterFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [tanggalMulai, setTanggalMulai] = useState("");
   const [tanggalSelesai, setTanggalSelesai] = useState("");
   const [page, setPage] = useState(1);
   const limit = 10;
 
-  const { data: bookingResponse, isLoading, isError } = useQuery({
-    queryKey: ["booking", user?.id_faskes, statusFilter, search, dokterFilter, tanggalMulai, tanggalSelesai, page],
+  const {
+    data: bookingResponse,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: [
+      "booking",
+      user?.id_faskes,
+      statusFilter,
+      search,
+      namaDokterFilter,
+      tanggalMulai,
+      tanggalSelesai,
+      page,
+    ],
     queryFn: () =>
       getBookingList(user?.id_faskes || "", {
         status: statusFilter || undefined,
         search: search || undefined,
-        dokter: dokterFilter || undefined,
+        nama_dokter: namaDokterFilter || undefined,
         tanggal_mulai: tanggalMulai || undefined,
         tanggal_selesai: tanggalSelesai || undefined,
         page,
@@ -148,7 +161,11 @@ const MonitoringTable: React.FC = () => {
         header: "Aksi",
         cell: (info) => (
           <button
-            onClick={() => navigate(`/konsultasi/monitoring/${info.row.original.id_booking_dokter}`)}
+            onClick={() =>
+              navigate(
+                `/konsultasi/monitoring/${info.row.original.id_booking_dokter}`,
+              )
+            }
             className="text-primary hover:underline text-xs font-bold flex items-center uppercase tracking-wider"
           >
             Detail
@@ -187,10 +204,10 @@ const MonitoringTable: React.FC = () => {
         </div>
         <input
           type="text"
-          placeholder="ID Dokter"
-          value={dokterFilter}
+          placeholder="Cari dokter..."
+          value={namaDokterFilter}
           onChange={(e) => {
-            setDokterFilter(e.target.value);
+            setNamaDokterFilter(e.target.value);
             setPage(1);
           }}
           className="px-4 py-2 bg-surface rounded-full border-none text-sm focus:ring-2 focus:ring-primary transition-all w-40"
@@ -267,10 +284,7 @@ const MonitoringTable: React.FC = () => {
           <tbody>
             {table.getRowModel().rows.length > 0 ? (
               table.getRowModel().rows.map((row) => (
-                <tr
-                  key={row.id}
-                  className="hover:bg-surface transition-colors"
-                >
+                <tr key={row.id} className="hover:bg-surface transition-colors">
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
@@ -304,8 +318,7 @@ const MonitoringTable: React.FC = () => {
       <div className="p-4 bg-surface flex items-center justify-between">
         <div className="text-xs text-text-muted font-medium">
           Menampilkan{" "}
-          <span className="text-text font-bold">{bookings.length}</span>{" "}
-          dari{" "}
+          <span className="text-text font-bold">{bookings.length}</span> dari{" "}
           <span className="text-text font-bold">
             {pagination?.totalItems ?? 0}
           </span>{" "}

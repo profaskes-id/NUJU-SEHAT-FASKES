@@ -109,8 +109,10 @@ const SidebarItem: React.FC<{ item: MenuItem }> = ({ item }) => {
   const baseClasses =
     "flex items-center px-3 py-2.5 transition-all duration-200 cursor-pointer mb-1 rounded-sidebar";
   const inactiveClasses = "text-sidebar-text hover:bg-sidebar-hover";
-  const activeParentClasses = "bg-sidebar-active text-sidebar-text-active font-medium";
-  const activeChildClasses = "bg-sidebar-active/10 text-sidebar-text-active font-medium";
+  const activeParentClasses =
+    "bg-sidebar-active text-sidebar-text-active font-medium";
+  const activeChildClasses =
+    "bg-sidebar-active/10 text-sidebar-text-active font-medium";
 
   const renderContent = (active: boolean, isChild: boolean = false) => (
     <div className="flex items-center justify-between w-full">
@@ -250,7 +252,7 @@ const Sidebar: React.FC = () => {
             </p>
           </div>
         </div>
-        <button 
+        <button
           onClick={logout}
           className="flex items-center w-full px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 rounded-sidebar transition-colors"
         >

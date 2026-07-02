@@ -109,9 +109,11 @@ const MonitoringDetail: React.FC = () => {
   }
 
   const d = response.data;
-  const status = statusConfig[d.status.toLowerCase()] || statusConfig.completed;
-  const StatusIcon = status.icon;
   const isCancelled = d.is_cancel === 1;
+  const status = isCancelled
+    ? statusConfig.cancelled
+    : statusConfig[d.status.toLowerCase()] || statusConfig.completed;
+  const StatusIcon = status.icon;
 
   return (
     <div className="space-y-5 max-w-5xl mx-auto">

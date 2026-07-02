@@ -17,6 +17,7 @@ import {
   Fingerprint,
   AlertTriangle,
   Microscope,
+  Image,
 } from "lucide-react";
 import type { RequestDokter, DokterDetail } from "@/features/dokter/types";
 import { formatDate } from "@/utils/format";
@@ -200,7 +201,7 @@ const RequestDokterDetailCard: React.FC<RequestDokterDetailCardProps> = ({
                   </p>
                   <div className="flex items-center text-yellow-500 font-bold mt-0.5">
                     <Star className="w-3.5 h-3.5 fill-yellow-500 mr-0.5" />
-                    {dokter.rating_dokter || "0.0"}
+                    {dokter.rating || "0.0"}
                   </div>
                 </div>
                 <div className="text-center">
@@ -275,6 +276,49 @@ const RequestDokterDetailCard: React.FC<RequestDokterDetailCardProps> = ({
                   label="Nomor HP"
                   value={dokter.nomor_hp_dokter}
                 />
+              </div>
+            </div>
+
+            {/* Dokumen */}
+            <div className="px-5 py-4">
+              <SubHeader icon={<Image className="w-4 h-4" />} title="Dokumen" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="rounded-lg overflow-hidden border border-surface-border/30">
+                  <div className="px-4 py-2.5 bg-white dark:bg-dark-card text-xs font-bold text-text-muted uppercase tracking-wider">
+                    Foto Dokter
+                  </div>
+                  <div className="p-4 flex justify-center">
+                    {dokter.foto ? (
+                      <a href={dokter.foto} target="_blank" rel="noopener noreferrer">
+                        <img
+                          src={dokter.foto}
+                          alt="Foto Dokter"
+                          className="w-32 h-32 object-cover rounded-lg border border-surface-border hover:opacity-80 transition-opacity cursor-pointer"
+                        />
+                      </a>
+                    ) : (
+                      <span className="text-xs text-text-muted italic">Tidak tersedia</span>
+                    )}
+                  </div>
+                </div>
+                <div className="rounded-lg overflow-hidden border border-surface-border/30">
+                  <div className="px-4 py-2.5 bg-white dark:bg-dark-card text-xs font-bold text-text-muted uppercase tracking-wider">
+                    KTP
+                  </div>
+                  <div className="p-4 flex justify-center">
+                    {dokter.ktp ? (
+                      <a href={dokter.ktp} target="_blank" rel="noopener noreferrer">
+                        <img
+                          src={dokter.ktp}
+                          alt="KTP Dokter"
+                          className="w-32 h-32 object-cover rounded-lg border border-surface-border hover:opacity-80 transition-opacity cursor-pointer"
+                        />
+                      </a>
+                    ) : (
+                      <span className="text-xs text-text-muted italic">Tidak tersedia</span>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
 
